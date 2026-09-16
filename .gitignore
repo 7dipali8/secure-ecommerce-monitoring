@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# Testing
+coverage/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Nested Git repositories
+**/.git/
+*.tsbuildinfo
