@@ -15,11 +15,14 @@ import { AuthModule } from './auth/auth.module.js';
 
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT) || 5432,
+      username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
-      database: 'ecommerce_db',
+      database: process.env.DB_NAME || 'ecommerce_db',
+      ssl: {
+        rejectUnauthorized: false,
+      },
       entities: [Payment, Order],
       synchronize: false,
     }),
