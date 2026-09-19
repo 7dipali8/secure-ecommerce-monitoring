@@ -36,8 +36,11 @@ export class ProductService {
   async create(createProductDto: CreateProductDto) {
     const product = this.productRepository.create({
       name: createProductDto.name,
+      brand: createProductDto.brand ?? null,
       description: createProductDto.description ?? null,
       price: createProductDto.price,
+      originalPrice: createProductDto.originalPrice ?? createProductDto.price,
+      discountPercent: createProductDto.discountPercent ?? 0,
       category: createProductDto.category ?? null,
       stock: createProductDto.stock ?? 0,
       imageUrl: createProductDto.imageUrl ?? null,
