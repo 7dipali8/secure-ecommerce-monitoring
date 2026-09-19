@@ -38,6 +38,7 @@ export class OrderService {
       let totalAmount = 0;
 
       const orderItems: {
+        product: Product;
         productId: number;
         quantity: number;
         price: number;
@@ -55,6 +56,12 @@ export class OrderService {
           );
         }
 
+        if (item.quantity <= 0) {
+          throw new BadRequestException(
+            `Quantity for product ${product.name} must be greater than 0`,
+          );
+        }
+
         if (item.quantity > product.stock) {
           throw new BadRequestException(
             `Only ${product.stock} items of ${product.name} are available`,
@@ -66,6 +73,7 @@ export class OrderService {
         totalAmount += price * item.quantity;
 
         orderItems.push({
+          product,
           productId: product.id,
           quantity: item.quantity,
           price,
@@ -86,19 +94,9 @@ export class OrderService {
 
       // Reduce stock and create order items
       for (const item of orderItems) {
-        const product = await manager.findOne(Product, {
-          where: { id: item.productId },
-        });
+        item.product.stock -= item.quantity;
 
-        if (!product) {
-          throw new NotFoundException(
-            `Product ${item.productId} not found`,
-          );
-        }
-
-        product.stock -= item.quantity;
-
-        await manager.save(Product, product);
+        await manager.save(Product, item.product);
 
         const orderItem = manager.create(OrderItem, {
           orderId: savedOrder.id,
@@ -110,6 +108,7 @@ export class OrderService {
         itemsToSave.push(orderItem);
       }
 
+      // Save all order items
       await manager.save(OrderItem, itemsToSave);
 
       return {
@@ -126,3 +125,4 @@ export class OrderService {
     });
   }
 }
+
