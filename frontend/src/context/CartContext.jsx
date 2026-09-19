@@ -1,0 +1,145 @@
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import api from '../services/api';
+import { useAuth } from './AuthContext';
+import { useToast } from './ToastContext';
+
+const CartContext = createContext(null);
+
+export const CartProvider = ({ children }) => {
+  const [cartItems, setCartItems] = useState(() => {
+    try {
+      const saved = localStorage.getItem('shopnest_local_cart');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [totalItems, setTotalItems] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const { addToast } = useToast();
+
+  // Recalculate total item count
+  useEffect(() => {
+    const count = cartItems.reduce((sum, item) => sum + (Number(item.quantity) || 1), 0);
+    setTotalItems(count);
+    localStorage.setItem('shopnest_local_cart', JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  const fetchCart = useCallback(async () => {
+    if (!isAuthenticated) return;
+    setLoading(true);
+    try {
+      const response = await api.get('/cart');
+      if (response.data) {
+        const items = Array.isArray(response.data.items) ? response.data.items : (Array.isArray(response.data) ? response.data : []);
+        if (items.length > 0) {
+          setCartItems(items);
+        }
+      }
+    } catch (error) {
+      console.warn('Backend cart API offline. Using local cart state:', error.message);
+    } finally {
+      setLoading(false);
+    }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    fetchCart();
+  }, [fetchCart]);
+
+  const addToCart = async (productId, quantity = 1, productDetails = null) => {
+    // Attempt backend sync if authenticated
+    if (isAuthenticated) {
+      try {
+        await api.post('/cart', {
+          productId: Number(productId),
+          quantity: Number(quantity),
+        });
+      } catch (err) {
+        console.warn('Backend cart sync offline, managing locally:', err.message);
+      }
+    }
+
+    // Always update local cart state so UX works seamlessly
+    setCartItems((prev) => {
+      const existingIndex = prev.findIndex((item) => String(item.productId) === String(productId));
+      if (existingIndex > -1) {
+        const updated = [...prev];
+        updated[existingIndex] = {
+          ...updated[existingIndex],
+          quantity: updated[existingIndex].quantity + Number(quantity),
+        };
+        return updated;
+      } else {
+        return [
+          ...prev,
+          {
+            id: Date.now(),
+            productId: Number(productId),
+            quantity: Number(quantity),
+            addedAt: new Date().toISOString(),
+          },
+        ];
+      }
+    });
+
+    addToast('Added to cart!', 'success');
+    return { success: true };
+  };
+
+  const updateQuantity = async (productId, delta) => {
+    if (isAuthenticated) {
+      try {
+        if (delta > 0) {
+          await api.post('/cart', { productId: Number(productId), quantity: delta });
+        }
+      } catch (err) {
+        console.warn('Backend update quantity offline, applying locally:', err.message);
+      }
+    }
+
+    setCartItems((prev) => {
+      return prev
+        .map((item) => {
+          if (String(item.productId) === String(productId)) {
+            const newQty = item.quantity + delta;
+            return newQty > 0 ? { ...item, quantity: newQty } : null;
+          }
+          return item;
+        })
+        .filter(Boolean);
+    });
+  };
+
+  const clearCart = () => {
+    setCartItems([]);
+    setTotalItems(0);
+    localStorage.removeItem('shopnest_local_cart');
+  };
+
+  return (
+    <CartContext.Provider
+      value={{
+        cartItems,
+        totalItems,
+        loading,
+        fetchCart,
+        addToCart,
+        updateQuantity,
+        clearCart,
+      }}
+    >
+      {children}
+    </CartContext.Provider>
+  );
+};
+
+export const useCart = () => {
+  const context = useContext(CartContext);
+  if (!context) {
+    throw new Error('useCart must be used within a CartProvider');
+  }
+  return context;
+};
