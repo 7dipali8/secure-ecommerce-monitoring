@@ -14,6 +14,41 @@ export class GatewayController {
   constructor(private readonly gatewayService: GatewayService) {}
 
   // =========================
+  // AUTH ROUTES
+  // =========================
+
+  @Post('auth/register')
+  async register(
+    @Body()
+    body: {
+      name: string;
+      email: string;
+      password: string;
+    },
+  ) {
+    return this.gatewayService.forwardPost(
+      process.env.AUTH_SERVICE_URL!,
+      '/auth/register',
+      body,
+    );
+  }
+
+  @Post('auth/login')
+  async login(
+    @Body()
+    body: {
+      email: string;
+      password: string;
+    },
+  ) {
+    return this.gatewayService.forwardPost(
+      process.env.AUTH_SERVICE_URL!,
+      '/auth/login',
+      body,
+    );
+  }
+
+  // =========================
   // PRODUCT ROUTES
   // =========================
 
