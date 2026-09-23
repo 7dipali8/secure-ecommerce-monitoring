@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+        width="800" height="450" viewBox="0 0 800 450">
+      <rect width="800" height="450" rx="28" fill="#f7f7f7"/>
+      
+  <rect x="120" y="160" width="150" height="105" rx="12"
+        fill="#d98b4a" stroke="#222" stroke-width="7"/>
+  <rect x="290" y="145" width="150" height="105" rx="12"
+        fill="#d98b4a" stroke="#222" stroke-width="7"/>
+  <text x="170" y="225" font-family="Arial" font-size="25"
+        fill="white" font-weight="bold">YOGA</text>
+  <text x="340" y="210" font-family="Arial" font-size="25"
+        fill="white" font-weight="bold">BLOCK</text>
+
+      <text x="470" y="200" font-family="Arial" font-size="28"
+            font-weight="bold">YOGA BLOCK SET</text>
+    </svg>

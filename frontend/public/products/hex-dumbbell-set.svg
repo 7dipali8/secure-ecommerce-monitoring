@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+        width="800" height="450" viewBox="0 0 800 450">
+      <rect width="800" height="450" rx="28" fill="#f7f7f7"/>
+      
+  <g fill="#222" stroke="#111" stroke-width="5">
+    <polygon points="110,170 150,145 190,170 190,220 150,245 110,220"/>
+    <polygon points="220,155 265,130 310,155 310,225 265,250 220,225"/>
+    <polygon points="345,140 395,110 445,140 445,240 395,270 345,240"/>
+  </g>
+  <g stroke="#777" stroke-width="15">
+    <path d="M190 195 H220"/>
+    <path d="M310 190 H345"/>
+  </g>
+
+      <text x="470" y="200" font-family="Arial" font-size="28"
+            font-weight="bold">HEX DUMBBELL SET</text>
+    </svg>

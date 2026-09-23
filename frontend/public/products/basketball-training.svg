@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+        width="800" height="450" viewBox="0 0 800 450">
+      <rect width="800" height="450" rx="28" fill="#f7f7f7"/>
+      
+    <circle cx="230" cy="220" r="115" fill="#d96a20" stroke="#222" stroke-width="6"/>
+    <path d="M120 175 Q230 220 340 175
+             M120 265 Q230 220 340 265
+             M230 105 Q180 220 230 335
+             M230 105 Q280 220 230 335"
+          fill="none" stroke="#222" stroke-width="6"/>
+    <text x="410" y="190" font-family="Arial" font-size="30"
+          font-weight="bold">BASKETBALL</text>
+    <text x="410" y="230" font-family="Arial" font-size="22"
+          fill="#555">TRAINING</text>
+    
+    </svg>

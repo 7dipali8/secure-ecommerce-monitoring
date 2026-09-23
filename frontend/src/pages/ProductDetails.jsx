@@ -49,7 +49,7 @@ const ProductDetails = () => {
   if (error || !product) return <ErrorMessage title="Unable to load product" message={error || 'Product not found'} onRetry={fetchProduct} />;
 
   const { name, description, price, category, stock, imageUrl } = product;
-  const imageSrc = getProductImage(imageUrl, category);
+  const imageSrc = getProductImage(imageUrl, name, category);
 
   const handleAddToCart = async () => {
     setAdding(true);
@@ -83,7 +83,7 @@ const ProductDetails = () => {
           <img
             src={imageSrc}
             alt={name}
-            onError={(e) => handleImageError(e, category)}
+            onError={(e) => handleImageError(e, name, category)}
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           />
           {category && (

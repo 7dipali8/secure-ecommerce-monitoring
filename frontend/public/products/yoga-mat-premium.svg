@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+        width="800" height="450" viewBox="0 0 800 450">
+      <rect width="800" height="450" rx="28" fill="#f7f7f7"/>
+      
+  <rect x="120" y="100" width="110" height="270" rx="45"
+        fill="#2878d6" stroke="#222" stroke-width="7"/>
+  <path d="M120 140 H230 M120 190 H230 M120 240 H230 M120 290 H230"
+        stroke="#9dc4f0" stroke-width="5"/>
+  <circle cx="175" cy="115" r="28" fill="none" stroke="#222" stroke-width="6"/>
+
+      <text x="470" y="200" font-family="Arial" font-size="28"
+            font-weight="bold">YOGA MAT PREMIUM</text>
+    </svg>

@@ -104,9 +104,9 @@ const Cart = () => {
                 }}
               >
                 <img
-                  src={getProductImage(item.product.imageUrl, item.product.category)}
+                  src={getProductImage(item.product.imageUrl, item.product.name, item.product.category)}
                   alt={item.product.name}
-                  onError={(e) => handleImageError(e, item.product.category)}
+                  onError={(e) => handleImageError(e, item.product.name, item.product.category)}
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
               </div>

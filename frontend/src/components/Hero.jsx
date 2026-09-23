@@ -13,35 +13,12 @@ const Hero = () => {
         padding: '3.5rem 2.5rem',
         margin: '1rem 0 2.5rem 0',
         overflow: 'hidden',
+        width: '100%',
+        maxWidth: '100%',
+        boxSizing: 'border-box',
         boxShadow: 'var(--shadow-xl)',
       }}
     >
-      {/* Decorative ambient lighting circles */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '-20%',
-          right: '-10%',
-          width: '400px',
-          height: '400px',
-          background: 'radial-gradient(circle, rgba(59, 130, 246, 0.25) 0%, rgba(0, 0, 0, 0) 70%)',
-          borderRadius: '50%',
-          pointerEvents: 'none',
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '-30%',
-          left: '20%',
-          width: '350px',
-          height: '350px',
-          background: 'radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, rgba(0, 0, 0, 0) 70%)',
-          borderRadius: '50%',
-          pointerEvents: 'none',
-        }}
-      />
-
       <div style={{ position: 'relative', zIndex: 2, maxWidth: '650px' }}>
         <div
           style={{

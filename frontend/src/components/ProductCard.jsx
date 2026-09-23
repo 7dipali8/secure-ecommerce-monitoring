@@ -26,27 +26,35 @@ const ProductCard = ({ product }) => {
     }
   };
 
-  const imageSrc = getProductImage(imageUrl, category);
+  const isTableTennis =
+    (name && name.toLowerCase().includes('table tennis')) ||
+    (category && category.toLowerCase().includes('table tennis'));
+
+  const imageSrc = isTableTennis
+    ? null
+    : getProductImage(imageUrl, name, category);
 
   return (
     <div className="card card-hover" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       {/* Product Image Container */}
       <Link to={`/products/${id}`} style={{ position: 'relative', overflow: 'hidden', paddingTop: '75%', backgroundColor: '#f1f5f9' }}>
-        <img
-          src={imageSrc}
-          alt={name}
-          onError={(e) => handleImageError(e, category)}
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            transition: 'transform 0.3s ease',
-          }}
-          loading="lazy"
-        />
+        {!isTableTennis && (
+          <img
+            src={imageSrc}
+            alt={name}
+            onError={(e) => handleImageError(e, name, category)}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              transition: 'transform 0.3s ease',
+            }}
+            loading="lazy"
+          />
+        )}
         {category && (
           <span
             className="badge badge-primary"

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+        width="800" height="450" viewBox="0 0 800 450">
+      <rect width="800" height="450" rx="28" fill="#f7f7f7"/>
+      
+  <path d="M130 270 L170 150 L410 150 L450 270 Z"
+        fill="#222" stroke="#111" stroke-width="8"/>
+  <rect x="170" y="135" width="240" height="35" rx="12"
+        fill="#555"/>
+  <path d="M205 220 H375" stroke="#d62828" stroke-width="14"/>
+
+      <text x="470" y="200" font-family="Arial" font-size="28"
+            font-weight="bold">EXERCISE STEPPER</text>
+    </svg>

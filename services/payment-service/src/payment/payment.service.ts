@@ -44,6 +44,13 @@ export class PaymentService {
       );
     }
 
+    // Prevent paying an already completed order.
+    if (order.status === 'PAID') {
+      throw new BadRequestException(
+        'Order has already been paid',
+      );
+    }
+
     const orderAmount = Number(order.totalAmount);
     const paymentAmount = Number(dto.amount);
 
@@ -74,8 +81,14 @@ export class PaymentService {
       paidAt: new Date(),
     });
 
+    // Save payment first.
     const savedPayment =
       await this.paymentRepository.save(payment);
+
+    // Payment succeeded, so update the corresponding order.
+    order.status = 'PAID';
+
+    await this.orderRepository.save(order);
 
     return {
       message: 'Payment successful',

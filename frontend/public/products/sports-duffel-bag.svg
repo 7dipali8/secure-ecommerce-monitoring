@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+        width="800" height="450" viewBox="0 0 800 450">
+      <rect width="800" height="450" rx="28" fill="#f7f7f7"/>
+      
+  <path d="M110 175 Q110 145 145 145 H405 Q440 145 440 175
+           V300 Q440 335 405 335 H145 Q110 335 110 300 Z"
+        fill="#222" stroke="#111" stroke-width="8"/>
+  <path d="M175 145 Q175 70 275 70 Q375 70 375 145"
+        fill="none" stroke="#555" stroke-width="20"/>
+  <rect x="205" y="215" width="140" height="60" rx="10"
+        fill="#d62828"/>
+
+      <text x="470" y="200" font-family="Arial" font-size="28"
+            font-weight="bold">SPORTS DUFFEL BAG</text>
+    </svg>

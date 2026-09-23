@@ -23,10 +23,19 @@ const Home = () => {
       } else {
         setProducts([]);
       }
-    } catch (err) {
-      console.error('Failed to load products from API Gateway:', err);
-      setError('Unable to load products. Please try again.');
-    } finally {
+} catch (err) {
+  console.error('Failed to load products from API Gateway:', err);
+  console.error('Error message:', err.message);
+  console.error('Error response:', err.response);
+  console.error('Error request:', err.request);
+
+  setError(
+    err.response
+      ? `API Error: ${err.response.status}`
+      : `Network Error: ${err.message}`
+  );
+}
+	    finally {
       setLoading(false);
     }
   };

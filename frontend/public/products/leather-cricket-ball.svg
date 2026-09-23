@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+      <rect width="800" height="450" rx="28" fill="#f7f7f7"/>
+      
+    <g>
+      <circle cx="250" cy="220" r="105" fill="#b51f2b"/>
+      <path d="M180 150 Q250 220 320 150 M180 290 Q250 220 320 290"
+            fill="none" stroke="#f5c5c5" stroke-width="7"/>
+      <circle cx="430" cy="300" r="24" fill="#b51f2b"/>
+      <text x="400" y="150" font-size="28" font-family="Arial" font-weight="bold" fill="#222">CRICKET BALL</text>
+      <text x="400" y="190" font-size="20" font-family="Arial" fill="#555">Leather Match Ball</text>
+    </g>
+    
+    </svg>

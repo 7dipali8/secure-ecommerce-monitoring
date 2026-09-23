@@ -12,7 +12,7 @@ const DEFAULT_CATEGORIES = [
 
 const CategoryNav = ({ selectedCategory, onSelectCategory, categories = DEFAULT_CATEGORIES }) => {
   return (
-    <nav className="category-nav-bar" style={{ padding: '0.75rem 0', overflowX: 'auto' }}>
+    <nav className="category-nav-bar" style={{ padding: '0.75rem 0', overflowX: 'auto', maxWidth: '100%', width: '100%' }}>
       <div style={{ display: 'flex', gap: '0.625rem', alignItems: 'center' }}>
         {categories.map((cat) => {
           const categoryName = typeof cat === 'string' ? cat : cat.name;

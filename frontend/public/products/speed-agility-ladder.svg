@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+        width="800" height="450" viewBox="0 0 800 450">
+      <rect width="800" height="450" rx="28" fill="#f7f7f7"/>
+      
+  <path d="M120 100 L120 350 M420 100 L420 350"
+        stroke="#222" stroke-width="18"/>
+  <g stroke="#d6a21e" stroke-width="14">
+    <path d="M120 125 H420"/>
+    <path d="M120 175 H420"/>
+    <path d="M120 225 H420"/>
+    <path d="M120 275 H420"/>
+    <path d="M120 325 H420"/>
+  </g>
+  <circle cx="120" cy="100" r="18" fill="#555"/>
+  <circle cx="420" cy="100" r="18" fill="#555"/>
+
+      <text x="470" y="200" font-family="Arial" font-size="28"
+            font-weight="bold">SPEED AGILITY LADDER</text>
+    </svg>

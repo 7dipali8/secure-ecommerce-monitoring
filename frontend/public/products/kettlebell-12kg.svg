@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+        width="800" height="450" viewBox="0 0 800 450">
+      <rect width="800" height="450" rx="28" fill="#f7f7f7"/>
+      
+  <path d="M145 175 Q145 90 240 90 Q335 90 335 175
+           L325 295 Q240 350 155 295 Z"
+        fill="#333" stroke="#111" stroke-width="8"/>
+  <path d="M170 175 Q170 50 240 50 Q310 50 310 175"
+        fill="none" stroke="#333" stroke-width="30"/>
+  <text x="195" y="250" font-family="Arial" font-size="35"
+        fill="white" font-weight="bold">12 KG</text>
+
+      <text x="470" y="200" font-family="Arial" font-size="28"
+            font-weight="bold">KETTLEBELL 12KG</text>
+    </svg>
