@@ -34,9 +34,11 @@ spec:
   - name: kaniko
     image: gcr.io/kaniko-project/executor:v1.23.2-debug
     command:
-    - sleep
+    - /bin/sh
     args:
-    - infinity
+    - -c
+    - |
+        while true; do sleep 3600; done
     tty: true
 
   - name: kubectl
@@ -46,6 +48,7 @@ spec:
     args:
     - infinity
     tty: true
+
 '''
         }
     }
