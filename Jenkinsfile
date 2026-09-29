@@ -40,7 +40,7 @@ spec:
     tty: true
 
   - name: kubectl
-    image: public.ecr.aws/bitnami/kubectl:1.35
+    image: registry.k8s.io/kubectl:v1.35.0
     command:
     - sleep
     args:
