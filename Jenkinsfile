@@ -42,9 +42,10 @@ spec:
   - name: kubectl
     image: registry.k8s.io/kubectl:v1.35.0
     command:
-    - sleep
+    - /bin/sh
     args:
-    - infinity
+    - -c
+    - cat
     tty: true
 '''
         }
