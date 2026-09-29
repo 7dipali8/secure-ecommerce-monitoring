@@ -8,8 +8,13 @@ RUN npm ci
 
 COPY . .
 
-RUN npm run build
+RUN echo "===== FILES INSIDE /app/src =====" && \
+    find /app/src -type f | sort
 
+RUN echo "===== SEARCH FOR PHANTOM FILES =====" && \
+    find /app/src -type f | grep -E 'auth\.service|users\.service|users\.controller|user\.entity' || true
+
+RUN npm run build
 EXPOSE 3000
 
 CMD ["node", "dist/main"]
