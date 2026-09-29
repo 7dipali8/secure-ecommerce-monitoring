@@ -106,30 +106,33 @@ spec:
             }
         }
 
-        stage('Prepare ECR Authentication') {
-            steps {
-                container('aws') {
-                    sh '''
-                        set -e
 
-                        echo "Creating ECR Docker authentication..."
+	stage('Prepare ECR Authentication') {
+    steps {
+        container('aws') {
+            sh '''
+                set -e
 
-                        mkdir -p "$WORKSPACE/.docker"
+                echo "Creating ECR Docker authentication..."
 
-                        PASSWORD=$(aws ecr get-login-password --region "$AWS_REGION")
-                        AUTH=$(printf 'AWS:%s' "$PASSWORD" | base64 | tr -d '\\n')
+                mkdir -p "$WORKSPACE/.docker"
 
-                        printf '{"auths":{"%s":{"auth":"%s"}}}\\n' \
-                          "$ECR_REGISTRY" \
-                          "$AUTH" \
-                          > "$WORKSPACE/.docker/config.json"
+                set +x
+                PASSWORD=$(aws ecr get-login-password --region "$AWS_REGION")
+                AUTH=$(printf 'AWS:%s' "$PASSWORD" | base64 | tr -d '\\n')
+                printf '{"auths":{"%s":{"auth":"%s"}}}\\n' \
+                  "$ECR_REGISTRY" \
+                  "$AUTH" \
+                  > "$WORKSPACE/.docker/config.json"
+                unset PASSWORD AUTH
+                set -x
 
-                        echo "ECR authentication file created."
-                        ls -l "$WORKSPACE/.docker/config.json"
-                    '''
-                }
-            }
+                echo "ECR authentication file created."
+                ls -l "$WORKSPACE/.docker/config.json"
+            '''
         }
+    }
+}
 
         stage('Build and Push Images') {
             steps {
