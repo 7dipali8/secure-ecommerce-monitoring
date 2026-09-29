@@ -72,6 +72,9 @@ spec:
             steps {
                 container('tools') {
                     sh '''
+
+		        set -e
+                        git config --global --add safe.directory "$WORKSPACE"
                         echo "===== Node ====="
                         node --version
                         npm --version
