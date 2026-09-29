@@ -100,23 +100,19 @@ spec:
                     '''
                 }
 
-                container('kaniko') {
-                    sh '''
-                        sh """
-        set -e
+		                container('kaniko') {
+                    sh """
+                        set -e
 
-        echo "===== KANIKO CONTAINER WORKSPACE CHECK ====="
-        pwd
-        echo "--- Product-service files visible to Kaniko container ---"
-        find "\$WORKSPACE/services/product-service/src" -type f | sort || true
+                        echo "===== KANIKO CONTAINER WORKSPACE CHECK ====="
+                        pwd
 
-        echo "--- Phantom files visible to Kaniko container ---"
-            find "\$WORKSPACE/services/product-service/src" -type f | grep -F -e "auth.service.ts" -e "users.service.ts" -e "users.controller.ts" -e "user.entity.ts" || true
-        mkdir -p /kaniko/.docker
-        cp "\$WORKSPACE/.docker/config.json" /kaniko/.docker/config.json
-			echo "===== Kaniko ====="
+                        echo "--- Product-service files visible to Kaniko container ---"
+                        find "\$WORKSPACE/services/product-service/src" -type f | sort
+
+                        echo "===== Kaniko ====="
                         /kaniko/executor version
-                    '''
+                    """
                 }
             }
         }
