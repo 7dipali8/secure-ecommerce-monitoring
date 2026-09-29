@@ -134,72 +134,68 @@ spec:
     }
 }
 
-        stage('Build and Push Images') {
-            steps {
-                script {
 
-                    def images = [
-                        [name: 'auth-service',    context: 'services/auth-service'],
-                        [name: 'product-service', context: 'services/product-service'],
-                        [name: 'cart-service',    context: 'services/cart-service'],
-                        [name: 'order-service',   context: 'services/order-service'],
-                        [name: 'payment-service', context: 'services/payment-service'],
-                        [name: 'api-gateway',     context: 'api-gateway'],
-                        [name: 'frontend',        context: 'frontend']
-                    ]
+stage('Build and Push Images') {
+    steps {
+        script {
+            def services = [
+                [name: 'auth-service',    context: 'services/auth-service'],
+                [name: 'product-service', context: 'services/product-service'],
+                [name: 'cart-service',    context: 'services/cart-service'],
+                [name: 'order-service',   context: 'services/order-service'],
+                [name: 'payment-service', context: 'services/payment-service'],
+                [name: 'api-gateway',     context: 'api-gateway'],
+                [name: 'frontend',        context: 'frontend']
+            ]
 
-                    for (image in images) {
+            services.each { service ->
 
-                        stage("Build ${image.name}") {
+                echo "=============================================="
+                echo "Building ${service.name}"
+                echo "=============================================="
 
-                            container('kaniko') {
+                container('tools') {
+                    sh """
+                        echo "Checking workspace for ${service.name}..."
 
-                                if (image.name == 'frontend') {
+                        echo "--- Git commit ---"
+                        git rev-parse HEAD
 
-                                    sh """
-                                        set -e
+                        echo "--- Source files ---"
+                        find "\$WORKSPACE/${service.context}/src" -type f 2>/dev/null | sort || true
 
-                                        echo "===== Building ${image.name} ====="
+                        echo "--- Git-tracked source files ---"
+                        git ls-tree -r --name-only HEAD "${service.context}/src" | sort || true
 
-                                        mkdir -p /kaniko/.docker
-                                        cp "\$WORKSPACE/.docker/config.json" /kaniko/.docker/config.json
+                        echo "--- Product-service special check ---"
+                        if [ "${service.name}" = "product-service" ]; then
+                            echo "Checking for unexpected auth/users files..."
+                            find "\$WORKSPACE/services/product-service/src" -type f | grep -E '/(auth|users)/|auth\\.service\\.ts|users\\.service\\.ts|user\\.entity\\.ts' || true
+                        fi
+                    """
+                }
 
-                                        /kaniko/executor \\
-                                          --context "\$WORKSPACE/${image.context}" \\
-                                          --dockerfile "\$WORKSPACE/${image.context}/Dockerfile" \\
-                                          --destination "\$ECR_PREFIX/${image.name}:\$BUILD_NUMBER" \\
-                                          --destination "\$ECR_PREFIX/${image.name}:latest" \\
-                                          --build-arg VITE_API_URL=
+                container('kaniko') {
+                    sh """
+                        set -e
 
-                                        echo "${image.name} pushed successfully."
-                                    """
+                        mkdir -p /kaniko/.docker
+                        cp "\$WORKSPACE/.docker/config.json" /kaniko/.docker/config.json
 
-                                } else {
+                        echo "Starting Kaniko build for ${service.name}..."
 
-                                    sh """
-                                        set -e
-
-                                        echo "===== Building ${image.name} ====="
-
-                                        mkdir -p /kaniko/.docker
-                                        cp "\$WORKSPACE/.docker/config.json" /kaniko/.docker/config.json
-
-                                        /kaniko/executor \\
-                                          --context "\$WORKSPACE/${image.context}" \\
-                                          --dockerfile "\$WORKSPACE/${image.context}/Dockerfile" \\
-                                          --destination "\$ECR_PREFIX/${image.name}:\$BUILD_NUMBER" \\
-                                          --destination "\$ECR_PREFIX/${image.name}:latest"
-
-                                        echo "${image.name} pushed successfully."
-                                    """
-                                }
-                            }
-                        }
-                    }
+                        /kaniko/executor \
+                          --context "\$WORKSPACE/${service.context}" \
+                          --dockerfile "\$WORKSPACE/${service.context}/Dockerfile" \
+                          --destination "\$ECR_PREFIX/${service.name}:\$BUILD_NUMBER" \
+                          --destination "\$ECR_PREFIX/${service.name}:latest" \
+                          ${service.name == 'frontend' ? '--build-arg VITE_API_URL=' : ''}
+                    """
                 }
             }
         }
-
+    }
+}
         stage('Configure Kubernetes Access') {
             steps {
 
