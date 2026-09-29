@@ -63,6 +63,7 @@ spec:
 
         stage('Checkout') {
             steps {
+	        deleteDir()
                 checkout scm
             }
         }
