@@ -102,7 +102,20 @@ spec:
 
                 container('kaniko') {
                     sh '''
-                        echo "===== Kaniko ====="
+                        sh """
+        set -e
+
+        echo "===== KANIKO CONTAINER WORKSPACE CHECK ====="
+        pwd
+        echo "--- Product-service files visible to Kaniko container ---"
+        find "\$WORKSPACE/services/product-service/src" -type f | sort || true
+
+        echo "--- Phantom files visible to Kaniko container ---"
+        find "\$WORKSPACE/services/product-service/src" -type f | grep -E 'auth\\.service\\.ts|users\\.service\\.ts|users\\.controller\\.ts|user\\.entity\\.ts' || true
+
+        mkdir -p /kaniko/.docker
+        cp "\$WORKSPACE/.docker/config.json" /kaniko/.docker/config.json
+			echo "===== Kaniko ====="
                         /kaniko/executor version
                     '''
                 }
