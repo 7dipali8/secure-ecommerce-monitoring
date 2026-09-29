@@ -61,34 +61,6 @@ spec:
 
     stages {
 
-        // ============================================================
-        // CHECKOUT
-        // ============================================================
-
-        stage('Checkout') {
-            steps {
-                deleteDir()
-
-                checkout scm
-
-                sh '''
-                    set -e
-
-                    echo "===== Checkout completed ====="
-                    echo "Git commit:"
-                    git rev-parse HEAD
-
-                    echo "Git branch:"
-                    git branch --show-current
-
-                    echo "Workspace:"
-                    pwd
-
-                    echo "Top-level files:"
-                    ls -la
-                '''
-            }
-        }
 
 
         // ============================================================
