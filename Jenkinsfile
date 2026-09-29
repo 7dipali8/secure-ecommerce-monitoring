@@ -40,7 +40,7 @@ spec:
     tty: true
 
   - name: kubectl
-    image: bitnami/kubectl:1.35
+    image: public.ecr.aws/bitnami/kubectl:1.35
     command:
     - sleep
     args:
