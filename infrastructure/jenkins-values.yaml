@@ -1,0 +1,36 @@
+controller:
+  serviceAccount:
+    create: false
+    name: jenkins
+
+  serviceType: LoadBalancer
+
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "512Mi"
+    limits:
+      cpu: "500m"
+      memory: "1Gi"
+
+  numExecutors: 0
+
+  installPlugins:
+    - kubernetes
+    - workflow-aggregator
+    - git
+    - credentials-binding
+    - workflow-multibranch
+    - configuration-as-code
+    - docker-workflow
+    - aws-credentials
+    - pipeline-stage-view
+
+persistence:
+  enabled: true
+  storageClass: gp2
+  size: 10Gi
+
+agent:
+  enabled: true
+  podTemplates: {}

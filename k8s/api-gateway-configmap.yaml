@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-gateway-config
+  namespace: ecommerce
+data:
+  AUTH_SERVICE_URL: "http://auth-service:3000"
+  PRODUCT_SERVICE_URL: "http://product-service:3001"
+  CART_SERVICE_URL: "http://cart-service:3002"
+  ORDER_SERVICE_URL: "http://order-service:3003"
+  PAYMENT_SERVICE_URL: "http://payment-service:3004"

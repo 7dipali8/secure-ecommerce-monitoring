@@ -1,0 +1,30 @@
+{
+  "name": "secure-ecommerce-monitoring",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/7dipali8/secure-ecommerce-monitoring.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/7dipali8/secure-ecommerce-monitoring/issues"
+  },
+  "homepage": "https://github.com/7dipali8/secure-ecommerce-monitoring#readme",
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typeorm": "^1.1.1",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "pg": "^8.23.0",
+    "reflect-metadata": "^0.2.2"
+  }
+}

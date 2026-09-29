@@ -26,3 +26,16 @@ coverage/
 # Nested Git repositories
 **/.git/
 *.tsbuildinfo
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+terraform.tfstate
+terraform.tfstate.backup
+
+# Terraform generated reports
+infrastructure/plan.txt
+infrastructure/plan-details.txt
+*.plan
