@@ -40,13 +40,11 @@ spec:
     tty: true
 
   - name: kubectl
-    image: registry.k8s.io/kubectl:v1.35.0
+    image: alpine/k8s:1.35.0
     command:
-    - /bin/sh
+    - sleep
     args:
-    - -c
-    - cat
-    tty: true
+    - infinity
 '''
         }
     }
