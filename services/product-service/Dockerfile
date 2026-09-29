@@ -8,8 +8,9 @@ RUN npm ci
 
 COPY . .
 
-RUN echo "===== FILES INSIDE /app/src =====" && \
-    find /app/src -type f | sort
+RUN echo "===== CONTEXT CHECK =====" && \
+    pwd && \
+    find /app -maxdepth 3 -type f | sort
 
 RUN echo "===== SEARCH FOR PHANTOM FILES =====" && \
     find /app/src -type f | grep -E 'auth\.service|users\.service|users\.controller|user\.entity' || true
