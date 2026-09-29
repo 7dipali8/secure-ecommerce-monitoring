@@ -111,8 +111,7 @@ spec:
         find "\$WORKSPACE/services/product-service/src" -type f | sort || true
 
         echo "--- Phantom files visible to Kaniko container ---"
-        find "\$WORKSPACE/services/product-service/src" -type f | grep -E 'auth\\.service\\.ts|users\\.service\\.ts|users\\.controller\\.ts|user\\.entity\\.ts' || true
-
+            find "\$WORKSPACE/services/product-service/src" -type f | grep -F -e "auth.service.ts" -e "users.service.ts" -e "users.controller.ts" -e "user.entity.ts" || true
         mkdir -p /kaniko/.docker
         cp "\$WORKSPACE/.docker/config.json" /kaniko/.docker/config.json
 			echo "===== Kaniko ====="
