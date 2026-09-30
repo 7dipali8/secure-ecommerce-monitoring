@@ -648,32 +648,40 @@ EOF
                         ls -l "$KUBECONFIG"
                     '''
                 }
+         container('kubectl') {
 
-                container('kubectl') {
+    sh '''
+        set -e
 
-                    sh '''
-                        set -e
+        echo "================================================"
+        echo "TESTING KUBERNETES ACCESS"
+        echo "================================================"
 
-                        echo "================================================"
-                        echo "TESTING KUBERNETES ACCESS"
-                        echo "================================================"
+        export KUBECONFIG="$WORKSPACE/kubeconfig"
 
-                        export KUBECONFIG="$WORKSPACE/kubeconfig"
+        echo ""
+        echo "===== Ecommerce Namespace ====="
 
-                        kubectl cluster-info
+        kubectl get namespace "$KUBE_NAMESPACE" \
+          || kubectl create namespace "$KUBE_NAMESPACE"
 
-                        echo ""
-                        echo "===== Nodes ====="
+        echo ""
+        echo "===== Ecommerce Pods ====="
 
-                        kubectl get nodes -o wide
+        kubectl get pods -n "$KUBE_NAMESPACE"
 
-                        echo ""
-                        echo "===== Namespace ====="
+        echo ""
+        echo "===== Ecommerce Services ====="
 
-                        kubectl get namespace "$KUBE_NAMESPACE" \
-                          || kubectl create namespace "$KUBE_NAMESPACE"
-                    '''
-                }
+        kubectl get services -n "$KUBE_NAMESPACE"
+
+        echo ""
+        echo "===== Ecommerce Deployments ====="
+
+        kubectl get deployments -n "$KUBE_NAMESPACE"
+    '''
+}
+
             }
         }
 
