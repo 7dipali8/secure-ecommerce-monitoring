@@ -40,6 +40,11 @@ spec:
     - |
         while true; do sleep 3600; done
     tty: true
+    env:
+    - name: PATH
+      value: /busybox:/kaniko:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+
 
   - name: kubectl
     image: alpine/k8s:1.35.0
@@ -118,14 +123,40 @@ spec:
                     '''
                 }
 
-                container('kaniko') {
-                    sh '''
-                        set -e
 
-                        echo "===== Kaniko Version ====="
-                        /kaniko/executor version
-                    '''
-                }
+
+		container('kaniko') {
+
+    sh """
+        set -e
+
+        CONTEXT_DIR="\$WORKSPACE/.kaniko-context/${service.name}"
+
+        echo "===== Starting Kaniko ====="
+        echo "Service: ${service.name}"
+        echo "Context: \$CONTEXT_DIR"
+        echo "Dockerfile: \$CONTEXT_DIR/Dockerfile"
+
+        test -d "\$CONTEXT_DIR"
+        test -f "\$CONTEXT_DIR/Dockerfile"
+
+        mkdir -p /kaniko/.docker
+
+        cp "\$WORKSPACE/.docker/config.json" \
+           /kaniko/.docker/config.json
+
+        echo "===== Running Kaniko Executor ====="
+
+        /kaniko/executor \
+          --context "\$CONTEXT_DIR" \
+          --dockerfile "\$CONTEXT_DIR/Dockerfile" \
+          --destination "\$ECR_PREFIX/${service.name}:\$BUILD_NUMBER" \
+          --destination "\$ECR_PREFIX/${service.name}:latest" \
+          --cleanup
+
+        echo "===== ${service.name} image pushed successfully ====="
+    """
+}
             }
         }
 
