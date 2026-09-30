@@ -63,7 +63,9 @@ data "aws_iam_policy_document" "jenkins" {
     ]
   }
 
-  statement {
+
+
+    statement {
     sid    = "ReadRDSSecret"
     effect = "Allow"
 
@@ -77,7 +79,19 @@ data "aws_iam_policy_document" "jenkins" {
     ]
   }
 
+  statement {
+    sid    = "ReadJWTSecret"
+    effect = "Allow"
 
+    actions = [
+      "secretsmanager:GetSecretValue",
+      "secretsmanager:DescribeSecret"
+    ]
+
+    resources = [
+      "arn:aws:secretsmanager:${var.aws_region}:${var.aws_account_id}:secret:secure-ecommerce-monitoring/jwt-*"
+    ]
+  }
   statement {
     sid    = "EKSDescribeCluster"
     effect = "Allow"
