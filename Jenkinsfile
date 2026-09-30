@@ -34,7 +34,7 @@ spec:
   - name: kaniko
     image: gcr.io/kaniko-project/executor:v1.23.2-debug
     command:
-    - /bin/sh
+    - /busybox/sh
     args:
     - -c
     - |
