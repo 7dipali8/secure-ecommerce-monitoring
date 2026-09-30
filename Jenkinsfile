@@ -764,6 +764,70 @@ EOF
             }
         }
 
+
+        // ============================================================
+        // SYNC JWT SECRET TO KUBERNETES
+        // ============================================================
+
+        stage('Sync JWT Secret') {
+
+            steps {
+
+                container('aws') {
+
+                    sh '''
+                        set -e
+
+                        echo "================================================"
+                        echo "SYNCING JWT SECRET TO KUBERNETES"
+                        echo "================================================"
+
+                        JWT_JSON="$(aws secretsmanager get-secret-value \
+                          --secret-id secure-ecommerce-monitoring/jwt \
+                          --region "$AWS_REGION" \
+                          --query SecretString \
+                          --output text)"
+
+                        JWT_SECRET="$(printf '%s' "$JWT_JSON" | sed -n 's/.*"JWT_SECRET":"\\([^"]*\\)".*/\\1/p')"
+
+                        if [ -z "$JWT_SECRET" ]; then
+                            echo "ERROR: JWT_SECRET is missing from AWS Secrets Manager."
+                            exit 1
+                        fi
+
+                        printf '%s' "$JWT_SECRET" > "$WORKSPACE/jwt-secret.txt"
+                        chmod 600 "$WORKSPACE/jwt-secret.txt"
+
+                        echo "JWT secret retrieved successfully."
+                    '''
+                }
+
+                container('kubectl') {
+
+                    sh '''
+                        set -e
+
+                        export KUBECONFIG="$WORKSPACE/kubeconfig"
+
+                        kubectl create secret generic jwt-secret \
+                          --namespace "$KUBE_NAMESPACE" \
+                          --from-file=JWT_SECRET="$WORKSPACE/jwt-secret.txt" \
+                          --dry-run=client \
+                          -o yaml \
+                          | kubectl apply -f -
+
+                        rm -f "$WORKSPACE/jwt-secret.txt"
+
+                        echo ""
+                        echo "JWT Kubernetes Secret synchronized successfully."
+
+                        kubectl get secret jwt-secret \
+                          -n "$KUBE_NAMESPACE"
+                    '''
+                }
+            }
+        }
+
         // ============================================================
         // DEPLOY KUBERNETES MANIFESTS
         // ============================================================
