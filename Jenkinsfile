@@ -686,6 +686,84 @@ EOF
         }
 
 
+
+
+	        // ============================================================
+        // SYNC RDS CREDENTIALS TO KUBERNETES
+        // ============================================================
+
+        stage('Sync RDS Credentials') {
+
+            steps {
+
+                container('aws') {
+
+                    sh '''
+                        set -e
+
+                        echo "================================================"
+                        echo "SYNCING RDS CREDENTIALS TO KUBERNETES"
+                        echo "================================================"
+
+                        SECRET_JSON="$(aws secretsmanager get-secret-value \
+                          --secret-id secure-ecommerce-monitoring/rds \
+                          --region "$AWS_REGION" \
+                          --query SecretString \
+                          --output text)"
+
+                        echo "AWS Secrets Manager secret retrieved successfully."
+
+                        USERNAME="$(printf '%s' "$SECRET_JSON" | sed -n 's/.*"username":"\\([^"]*\\)".*/\\1/p')"
+                        PASSWORD="$(printf '%s' "$SECRET_JSON" | sed -n 's/.*"password":"\\([^"]*\\)".*/\\1/p')"
+                        HOST="$(printf '%s' "$SECRET_JSON" | sed -n 's/.*"host":"\\([^"]*\\)".*/\\1/p')"
+                        PORT="$(printf '%s' "$SECRET_JSON" | sed -n 's/.*"port":\\([0-9]*\\).*/\\1/p')"
+                        DBNAME="$(printf '%s' "$SECRET_JSON" | sed -n 's/.*"dbname":"\\([^"]*\\)".*/\\1/p')"
+
+                        if [ -z "$USERNAME" ] || [ -z "$PASSWORD" ] || [ -z "$HOST" ] || [ -z "$PORT" ] || [ -z "$DBNAME" ]; then
+                            echo "ERROR: Required RDS credentials are missing from AWS Secrets Manager."
+                            exit 1
+                        fi
+
+                        printf 'username=%s\\npassword=%s\\nhost=%s\\nport=%s\\ndbname=%s\\n' \
+                          "$USERNAME" \
+                          "$PASSWORD" \
+                          "$HOST" \
+                          "$PORT" \
+                          "$DBNAME" \
+                          > "$WORKSPACE/rds-credentials.env"
+
+                        chmod 600 "$WORKSPACE/rds-credentials.env"
+
+                        echo "RDS credentials prepared for Kubernetes."
+                    '''
+                }
+
+                container('kubectl') {
+
+                    sh '''
+                        set -e
+
+                        export KUBECONFIG="$WORKSPACE/kubeconfig"
+
+                        kubectl create secret generic rds-credentials \
+                          --namespace "$KUBE_NAMESPACE" \
+                          --from-env-file="$WORKSPACE/rds-credentials.env" \
+                          --dry-run=client \
+                          -o yaml \
+                          | kubectl apply -f -
+
+                        rm -f "$WORKSPACE/rds-credentials.env"
+
+                        echo ""
+                        echo "RDS Kubernetes Secret synchronized successfully."
+
+                        kubectl get secret rds-credentials \
+                          -n "$KUBE_NAMESPACE"
+                    '''
+                }
+            }
+        }
+
         // ============================================================
         // DEPLOY KUBERNETES MANIFESTS
         // ============================================================
