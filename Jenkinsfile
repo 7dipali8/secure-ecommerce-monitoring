@@ -720,10 +720,12 @@ EOF
                         echo ""
                         echo "Applying manifests..."
 
-                        kubectl apply \
-                          -f "$WORKSPACE/k8s" \
-                          -n "$KUBE_NAMESPACE"
 
+			for manifest in "$WORKSPACE"/k8s/*.yaml; do
+    if [ "$(basename "$manifest")" != "namespace.yaml" ]; then
+        kubectl apply -f "$manifest" -n "$KUBE_NAMESPACE"
+    fi
+done
 
                         echo ""
                         echo "================================================"
