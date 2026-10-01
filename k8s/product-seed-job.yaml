@@ -1,0 +1,50 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: product-seed-job
+  namespace: ecommerce
+spec:
+  backoffLimit: 2
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: product-seed
+          image: postgres:18
+          command: ["/bin/sh", "-c"]
+          args:
+            - psql -v ON_ERROR_STOP=1 -f /seed/products.sql
+          env:
+            - name: PGHOST
+              valueFrom:
+                secretKeyRef:
+                  name: rds-credentials
+                  key: host
+            - name: PGPORT
+              valueFrom:
+                secretKeyRef:
+                  name: rds-credentials
+                  key: port
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: rds-credentials
+                  key: username
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rds-credentials
+                  key: password
+            - name: PGDATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: rds-credentials
+                  key: dbname
+          volumeMounts:
+            - name: product-seed
+              mountPath: /seed
+              readOnly: true
+      volumes:
+        - name: product-seed
+          configMap:
+            name: product-seed-sql
