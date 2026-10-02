@@ -30,13 +30,6 @@ FROM (
         'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=600&auto=format&fit=crop&q=80'
     ),
     (
-        'HD Webcam',
-        'Logitech',
-        'HD webcam for online meetings and video calls',
-        1999.00, 2799.00, 29, 'Electronics', 35,
-        'https://images.unsplash.com/photo-1760348213920-d2a90ed705fd?auto=format&fit=crop&fm=jpg&q=80&w=600'
-    ),
-    (
         'Wi-Fi Router',
         'TP-Link',
         'Dual-band Wi-Fi router for home connectivity',
@@ -51,25 +44,11 @@ FROM (
         'https://images.unsplash.com/photo-1557935728-e6d1eaabe558?w=600&auto=format&fit=crop&q=80'
     ),
     (
-        'Portable Projector',
-        'Epson',
-        'Compact projector for home entertainment and presentations',
-        12999.00, 15999.00, 19, 'Electronics', 12,
-        'https://images.unsplash.com/photo-1535016120720-40c646be5580?w=600&auto=format&fit=crop&q=80'
-    ),
-    (
         'Digital Camera',
         'Canon',
         'Digital camera for photography and everyday shooting',
         24999.00, 29999.00, 17, 'Electronics', 10,
         'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600&auto=format&fit=crop&q=80'
-    ),
-    (
-        'Bluetooth Tracker',
-        'Samsung',
-        'Compact Bluetooth tracker for personal belongings',
-        1499.00, 1999.00, 25, 'Electronics', 30,
-        'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&auto=format&fit=crop&q=80'
     ),
     (
         'USB-C Hub',
@@ -146,13 +125,6 @@ FROM (
         'https://images.unsplash.com/photo-1599669454699-248893623440?w=600&auto=format&fit=crop&q=80'
     ),
     (
-        'Neckband Earphones',
-        'OnePlus',
-        'Wireless neckband earphones for everyday listening',
-        1299.00, 1799.00, 28, 'Audio', 40,
-        'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=600&auto=format&fit=crop&q=80'
-    ),
-    (
         'Soundbar',
         'Sony',
         'Compact soundbar for television and home entertainment',
@@ -220,13 +192,6 @@ FROM (
         'https://images.unsplash.com/photo-1527814050087-3793815479db?w=600&auto=format&fit=crop&q=80'
     ),
     (
-        'Laptop Stand',
-        'Portronics',
-        'Adjustable laptop stand for desk setups',
-        999.00, 1499.00, 33, 'Computers & Accessories', 35,
-        'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=600&auto=format&fit=crop&q=80'
-    ),
-    (
         'Laptop Backpack',
         'American Tourister',
         'Laptop backpack with padded laptop compartment',
@@ -239,13 +204,6 @@ FROM (
         'Compact 64GB USB flash drive for file storage',
         599.00, 899.00, 33, 'Computers & Accessories', 50,
         'https://images.unsplash.com/photo-1628557044797-f21a177c37ec?w=600&auto=format&fit=crop&q=80'
-    ),
-    (
-        'Portable SSD 500GB',
-        'Samsung',
-        'Portable solid-state drive for fast file transfers',
-        4499.00, 5999.00, 25, 'Computers & Accessories', 15,
-        'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=600&auto=format&fit=crop&q=80'
     ),
     (
         'MicroSD Card 128GB',
@@ -268,13 +226,6 @@ FROM (
         1299.00, 1799.00, 28, 'Computers & Accessories', 20,
         'https://images.unsplash.com/photo-1595225476474-87563907a212?w=600&auto=format&fit=crop&q=80'
     ),
-    (
-        'Wireless Keyboard',
-        'Logitech',
-        'Wireless keyboard for home and office use',
-        1499.00, 1999.00, 25, 'Computers & Accessories', 30,
-        'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600&auto=format&fit=crop&q=80'
-    )
 ) AS seed(name, brand, description, price, original_price, discount_percent, category, stock, image_url)
 WHERE NOT EXISTS (
     SELECT 1
@@ -291,13 +242,10 @@ SELECT
     seed.discount_percent, seed.category, seed.stock, seed.image_url
 FROM (VALUES
     ('Fast Charging Cable', 'Anker', 'Durable USB-C fast charging cable', 499, 799, 38, 'Mobile Accessories', 50, 'https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb'),
-    ('Wireless Charging Pad', 'Samsung', 'Qi wireless charging pad', 1499, 1999, 25, 'Mobile Accessories', 35, 'https://images.unsplash.com/photo-1591290619762-c588e6b9a3d3'),
-    ('Phone Case', 'Spigen', 'Shock-resistant protective phone case', 799, 1199, 33, 'Mobile Accessories', 60, 'https://images.unsplash.com/photo-1601593346740-925612772716'),
     ('Tempered Glass Protector', 'amFilm', 'Scratch-resistant screen protector', 399, 599, 33, 'Mobile Accessories', 80, 'https://images.unsplash.com/photo-1512499617640-c74ae3a79d37'),
     ('Car Phone Holder', 'Portronics', 'Adjustable dashboard mobile holder', 699, 999, 30, 'Mobile Accessories', 40, 'https://images.unsplash.com/photo-1503376780353-7e6692767b70'),
     ('USB-C OTG Adapter', 'UGREEN', 'Compact USB-C OTG adapter', 349, 499, 30, 'Mobile Accessories', 55, 'https://images.unsplash.com/photo-1625842268584-8f3296236761'),
     ('Selfie Stick Tripod', 'Portronics', 'Extendable selfie stick with tripod', 999, 1499, 33, 'Mobile Accessories', 25, 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32'),
-    ('Power Bank 10000mAh', 'Ambrane', 'Compact portable power bank', 1299, 1799, 28, 'Mobile Accessories', 45, 'https://images.unsplash.com/photo-1609592806596-b43badaf7c0c'),
     ('Mobile Ring Holder', 'PopSockets', 'Grip and stand for smartphones', 499, 699, 29, 'Mobile Accessories', 70, 'https://images.unsplash.com/photo-1556656793-08538906a9f8'),
     ('Multiport Charging Adapter', 'Belkin', 'Multi-device USB charging adapter', 1899, 2499, 24, 'Mobile Accessories', 30, 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0')
 ) AS seed(name, brand, description, price, original_price, discount_percent, category, stock, image_url)
@@ -317,7 +265,6 @@ FROM (VALUES
     ('Football', 'Nivia', 'Durable machine-stitched football for outdoor play', 899, 1299, 31, 'Sports', 30, 'https://images.unsplash.com/photo-1574629810360-7efbbe195018'),
     ('Volleyball', 'Cosco', 'Official-size volleyball for training and matches', 799, 1199, 33, 'Sports', 25, 'https://images.unsplash.com/photo-1612872087720-bb876e2e67d1'),
     ('Tennis Racket', 'Wilson', 'Lightweight tennis racket for recreational play', 2499, 3499, 29, 'Sports', 20, 'https://images.unsplash.com/photo-1622279457486-62dcc4a431d6'),
-    ('Table Tennis Bat', 'Stag', 'Control-focused table tennis bat', 699, 999, 30, 'Sports', 35, 'https://images.unsplash.com/photo-1611251135345-18c56206b863'),
     ('Basketball', 'Spalding', 'Indoor and outdoor basketball', 1299, 1799, 28, 'Sports', 25, 'https://images.unsplash.com/photo-1519861531473-9200262188bf'),
     ('Skipping Rope', 'Boldfit', 'Adjustable skipping rope for cardio workouts', 299, 499, 40, 'Sports', 50, 'https://images.unsplash.com/photo-1434596922112-19c563067271'),
     ('Sports Water Bottle', 'Decathlon', 'Reusable bottle for sports and outdoor activities', 399, 599, 33, 'Sports', 40, 'https://images.unsplash.com/photo-1602143407151-7111542de6e8'),
@@ -339,16 +286,10 @@ SELECT
     seed.name, seed.brand, seed.description, seed.price, seed.original_price,
     seed.discount_percent, seed.category, seed.stock, seed.image_url
 FROM (VALUES
-    ('English Willow Cricket Bat', 'SG', 'English willow cricket bat for leather-ball cricket', 4999, 6999, 29, 'Cricket', 15, 'https://images.unsplash.com/photo-1531415074968-036ba1b575da'),
-    ('Cricket Tennis Ball', 'Cosco', 'Durable tennis ball for casual cricket matches', 99, 149, 34, 'Cricket', 60, 'https://images.unsplash.com/photo-1622279457486-62dcc4a431d6'),
-    ('Cricket Helmet', 'Shrey', 'Protective cricket helmet with face guard', 2499, 3499, 29, 'Cricket', 12, 'https://images.unsplash.com/photo-1574629810360-7efbbe195018'),
     ('Batting Gloves', 'SS', 'Padded batting gloves with secure wrist support', 899, 1299, 31, 'Cricket', 20, 'https://images.unsplash.com/photo-1583473848882-f9a5bc7fd2ee'),
     ('Cricket Leg Guards', 'SG', 'Lightweight batting pads for cricket practice', 1499, 2199, 32, 'Cricket', 18, 'https://images.unsplash.com/photo-1531415074968-036ba1b575da'),
     ('Cricket Kit Bag', 'DSC', 'Spacious cricket kit bag with multiple compartments', 1999, 2799, 29, 'Cricket', 15, 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62'),
-    ('Cricket Stumps Set', 'Nivia', 'Portable cricket stumps set for practice', 699, 999, 30, 'Cricket', 25, 'https://images.unsplash.com/photo-1531415074968-036ba1b575da'),
-    ('Leather Cricket Ball', 'SG', 'Red leather cricket ball for match practice', 399, 599, 33, 'Cricket', 35, 'https://images.unsplash.com/photo-1574629810360-7efbbe195018'),
-    ('Cricket Arm Guard', 'SS', 'Protective forearm guard for batting', 499, 799, 38, 'Cricket', 20, 'https://images.unsplash.com/photo-1583473848882-f9a5bc7fd2ee'),
-    ('Cricket Practice Net', 'Cosco', 'Portable practice net for cricket training', 2999, 3999, 25, 'Cricket', 8, 'https://images.unsplash.com/photo-1531415074968-036ba1b575da')
+    ('Leather Cricket Ball', 'SG', 'Red leather cricket ball for match practice', 399, 599, 33, 'Cricket', 35, 'https://images.unsplash.com/photo-1574629810360-7efbbe195018')
 ) AS seed(name, brand, description, price, original_price, discount_percent, category, stock, image_url)
 WHERE NOT EXISTS (
     SELECT 1
@@ -478,62 +419,6 @@ FROM (VALUES
         'Grip-focused rubber basketball for outdoor courts.',
         799, 1199, 33, 'Basketball', 50,
         'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=600'
-    ),
-    (
-        'Basketball Training Shoes',
-        'Nike',
-        'Cushioned shoes designed for court movement and training.',
-        4999, 6499, 23, 'Basketball', 20,
-        'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600'
-    ),
-    (
-        'Basketball Hoop Net',
-        'Cosco',
-        'Replacement net for a standard basketball hoop.',
-        299, 449, 33, 'Basketball', 60,
-        'https://images.unsplash.com/photo-1519861531473-9200262188bf?w=600'
-    ),
-    (
-        'Portable Basketball Pump',
-        'Nivia',
-        'Hand pump with needle for inflating sports balls.',
-        249, 399, 38, 'Basketball', 70,
-        'https://images.unsplash.com/photo-1519861531473-9200262188bf?w=600'
-    ),
-    (
-        'Basketball Arm Sleeve',
-        'Nike',
-        'Stretchable arm sleeve for comfortable court practice.',
-	699, 999, 30, 'Basketball', 35,
-        'https://images.unsplash.com/photo-1519861531473-9200262188bf?w=600'
-    ),
-    (
-        'Basketball Training Cones',
-        'Boldfit',
-        'Set of training cones for agility and footwork drills.',
-        399, 599, 33, 'Basketball', 45,
-        'https://images.unsplash.com/photo-1519861531473-9200262188bf?w=600'
-    ),
-    (
-        'Basketball Sports Socks',
-        'Puma',
-        'Cushioned sports socks for court training.',
-        349, 499, 30, 'Basketball', 55,
-        'https://images.unsplash.com/photo-1586350977771-b3b0abd50c82?w=600'
-    ),
-    (
-        'Basketball Carry Bag',
-        'Cosco',
-        'Lightweight bag for carrying a basketball and accessories.',
-        599, 899, 33, 'Basketball', 30,
-        'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600'
-    ),
-    (
-        'Mini Basketball Set',
-        'Nivia',
-        'Mini basketball for recreational play and skill practice.',
-        499, 699, 29, 'Basketball', 40,
-        'https://images.unsplash.com/photo-1519861531473-9200262188bf?w=600'
     )
 ) AS seed(
     name, brand, description, price, original_price,
@@ -589,17 +474,10 @@ FROM (VALUES
         'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600'
     ),
     (
-        'Fitness Resistance Bands',
-        'Boldfit',
-        'Resistance band set for strength and mobility exercises.',
-        699, 999, 30, 'Fitness & Running', 45,
-        'https://images.unsplash.com/photo-1598289431512-b97b0917affc?w=600'
-    ),
-    (
         'Stainless Steel Shaker Bottle',
         'Puma',
         'Leak-resistant shaker bottle for mixing workout drinks.',
-[O        499, 799, 38, 'Fitness & Running', 60,
+        499, 799, 38, 'Fitness & Running', 60,
         'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=600'
     ),
     (
@@ -764,62 +642,6 @@ FROM (VALUES
         'Large-display iPhone with A18 performance and long battery life.',
         79900, 89900, 11, 'Mobiles', 12,
         'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600'
-    ),
-    (
-        'iPhone 16 Pro',
-        'Apple',
-        'Pro iPhone featuring an advanced camera system and A18 Pro chip.',
-        109900, 119900, 8, 'Mobiles', 10,
-        'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600'
-    ),
-    (
-        'iPhone 16 Pro Max',
-        'Apple',
-        'Premium iPhone with a large display, advanced cameras, and A18 Pro.',
-        129900, 144900, 10, 'Mobiles', 8,
-        'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600'
-    ),
-    (
-        'iPhone 15',
-        'Apple',
-        'iPhone with a Dynamic Island display and dual-camera system.',
-        59900, 69900, 14, 'Mobiles', 18,
-        'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600'
-    ),
-    (
-        'Samsung Galaxy S25',
-        'Samsung',
-        'Flagship smartphone with Galaxy AI and a high-resolution display.',
-        80999, 84999, 5, 'Mobiles', 12,
-        'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=600'
-    ),
-    (
-        'Samsung Galaxy S25+',
-        'Samsung',
-        'Premium Galaxy smartphone with a large display and powerful performance.',
-        99999, 104999, 5, 'Mobiles', 10,
-        'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=600'
-    ),
-    (
-        'Samsung Galaxy S25 Ultra',
-        'Samsung',
-        'Ultra-premium Galaxy phone with S Pen and advanced camera features.',
-        129999, 141999, 8, 'Mobiles', 8,
-        'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=600'
-    ),
-    (
-        'Samsung Galaxy A56 5G',
-        'Samsung',
-        'Mid-range 5G smartphone with a bright display and versatile cameras.',
-        41999, 45999, 9, 'Mobiles', 20,
-        'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=600'
-    ),
-    (
-        'Samsung Galaxy A36 5G',
-        'Samsung',
-        'Everyday 5G smartphone with a large display and dependable performance.',
-        32999, 36999, 11, 'Mobiles', 20,
-        'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=600'
     )
 ) AS seed(
     name, brand, description, price, original_price,
@@ -852,66 +674,10 @@ FROM (VALUES
         'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600'
     ),
     (
-        'iPhone 15 Pro',
-        'Apple',
-        'Premium iPhone with an A17 Pro chip and advanced camera capabilities.',
-        89900, 109900, 18, 'Mobiles', 10,
-        'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600'
-    ),
-    (
-        'iPhone 14',
-        'Apple',
-        'iPhone with an OLED display, A15 Bionic chip, and dual cameras.',
-        49900, 59900, 17, 'Mobiles', 15,
-        'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600'
-    ),
-    (
-        'iPhone 14 Plus',
-        'Apple',
-        'Large-display iPhone with an A15 Bionic chip and long battery life.',
-        59900, 69900, 14, 'Mobiles', 10,
-        'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600'
-    ),
-    (
-        'iPhone 13',
-        'Apple',
-        'Compact iPhone with an A15 Bionic chip and dual-camera system.',
-        39900, 49900, 20, 'Mobiles', 18,
-        'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600'
-    ),
-    (
-        'Samsung Galaxy S24 FE',
-        'Samsung',
-        'Galaxy smartphone with Galaxy AI features and a versatile camera.',
-        49999, 59999, 17, 'Mobiles', 12,
-        'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=600'
-    ),
-    (
-        'Samsung Galaxy S24 Ultra',
-        'Samsung',
-        'Premium Galaxy phone with S Pen support and advanced camera features.',
-        109999, 129999, 15, 'Mobiles', 8,
-        'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=600'
-    ),
-    (
-        'Samsung Galaxy A26 5G',
-        'Samsung',
-        '5G smartphone with a Super AMOLED display and versatile cameras.',
-        24999, 27999, 11, 'Mobiles', 25,
-        'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=600'
-    ),
-    (
         'Samsung Galaxy A16 5G',
         'Samsung',
         'Affordable 5G smartphone for everyday communication and entertainment.',
         18999, 21999, 14, 'Mobiles', 30,
-        'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=600'
-    ),
-    (
-        'Samsung Galaxy Z Flip6',
-        'Samsung',
-        'Foldable Galaxy smartphone with a compact design and flexible display.',
-        89999, 109999, 18, 'Mobiles', 6,
         'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=600'
     )
 ) AS seed(
