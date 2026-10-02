@@ -3,7 +3,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 
 import { Product } from '../product.entity.js';
 import { CreateProductDto } from './dto/create-product.dto.js';
@@ -17,6 +17,7 @@ export class ProductService {
 
   async findAll() {
     return this.productRepository.find({
+      where: { id: Not(346) },
       order: { id: 'ASC' },
     });
   }
