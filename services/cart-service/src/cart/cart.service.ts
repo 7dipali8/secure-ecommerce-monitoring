@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 import { CartItem } from './cart.entity.js';
 import { Product } from './product.entity.js';
@@ -111,6 +111,28 @@ export class CartService {
     item.quantity = quantity;
 
     return this.cartRepository.save(item);
+  }
+
+  async removePurchasedItems(userId: number, cartItemIds: number[]) {
+    const ids = [...new Set(
+      cartItemIds.filter(
+        (id) => Number.isInteger(id) && id > 0,
+      ),
+    )];
+
+    if (ids.length === 0) {
+      return { message: 'No purchased cart items to remove', removed: 0 };
+    }
+
+    const result = await this.cartRepository.delete({
+      userId,
+      id: In(ids),
+    });
+
+    return {
+      message: 'Purchased cart items removed',
+      removed: result.affected ?? 0,
+    };
   }
 
   async removeFromCart(

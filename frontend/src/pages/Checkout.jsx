@@ -8,7 +8,7 @@ import api from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 const Checkout = () => {
-  const { cartItems, totalItems, clearCart } = useCart();
+  const { cartItems, totalItems } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -91,14 +91,15 @@ const Checkout = () => {
       const orderId = orderData?.id;
       const amount = orderData?.totalAmount || subtotal;
 
-      clearCart();
-
       // Navigate to Payment page with generated order context
       navigate('/payments', {
         state: {
           orderId,
           amount,
           shippingAddress: shippingAddress.trim(),
+          cartItemIds: cartItems
+            .map((item) => Number(item.id))
+            .filter((id) => Number.isInteger(id) && id > 0),
         },
       });
     } catch (err) {

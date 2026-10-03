@@ -32,12 +32,13 @@ export const CartProvider = ({ children }) => {
     setLoading(true);
     try {
       const response = await api.get('/cart');
-      if (response.data) {
-        const items = Array.isArray(response.data.items) ? response.data.items : (Array.isArray(response.data) ? response.data : []);
-        if (items.length > 0) {
-          setCartItems(items);
-        }
-      }
+      const items = Array.isArray(response.data?.items)
+        ? response.data.items
+        : Array.isArray(response.data)
+          ? response.data
+          : [];
+
+      setCartItems(items);
     } catch (error) {
       console.warn('Backend cart API offline. Using local cart state:', error.message);
     } finally {
@@ -50,21 +51,26 @@ export const CartProvider = ({ children }) => {
   }, [fetchCart]);
 
   const addToCart = async (productId, quantity = 1, productDetails = null) => {
-    // Attempt backend sync if authenticated
     if (isAuthenticated) {
       try {
-        await api.post('/cart', {
+        await api.post("/cart", {
           productId: Number(productId),
           quantity: Number(quantity),
         });
+
+        await fetchCart();
+        addToast("Added to cart!", "success");
+        return { success: true };
       } catch (err) {
-        console.warn('Backend cart sync offline, managing locally:', err.message);
+        console.warn("Backend cart sync failed. Using local cart state:", err.message);
       }
     }
 
-    // Always update local cart state so UX works seamlessly
     setCartItems((prev) => {
-      const existingIndex = prev.findIndex((item) => String(item.productId) === String(productId));
+      const existingIndex = prev.findIndex(
+        (item) => String(item.productId) === String(productId)
+      );
+
       if (existingIndex > -1) {
         const updated = [...prev];
         updated[existingIndex] = {
@@ -72,20 +78,21 @@ export const CartProvider = ({ children }) => {
           quantity: updated[existingIndex].quantity + Number(quantity),
         };
         return updated;
-      } else {
-        return [
-          ...prev,
-          {
-            id: Date.now(),
-            productId: Number(productId),
-            quantity: Number(quantity),
-            addedAt: new Date().toISOString(),
-          },
-        ];
       }
+
+      return [
+        ...prev,
+        {
+          id: Date.now(),
+          productId: Number(productId),
+          quantity: Number(quantity),
+          addedAt: new Date().toISOString(),
+          ...(productDetails || {}),
+        },
+      ];
     });
 
-    addToast('Added to cart!', 'success');
+    addToast("Added to cart!", "success");
     return { success: true };
   };
 

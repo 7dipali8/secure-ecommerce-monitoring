@@ -93,6 +93,21 @@ export class GatewayController {
     );
   }
 
+  @Post('cart/clear-purchased')
+  async clearPurchasedCartItems(
+    @Body() body: { cartItemIds: number[] },
+    @Headers() headers: Record<string, string>,
+  ) {
+    return this.gatewayService.forwardPost(
+      process.env.CART_SERVICE_URL!,
+      '/cart/clear-purchased',
+      body,
+      {
+        authorization: headers.authorization || '',
+      },
+    );
+  }
+
   // =========================
   // ORDER ROUTES
   // =========================

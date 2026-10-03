@@ -4,14 +4,21 @@ import { CreditCard, CheckCircle2, ShieldCheck, ArrowRight, Smartphone, Banknote
 import api from '../services/api';
 import { formatPrice } from '../utils/helpers';
 import { useToast } from '../context/ToastContext';
+import { useCart } from '../context/CartContext';
 
 const Payment = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { addToast } = useToast();
+  const { fetchCart } = useCart();
 
   const stateData = location.state || {};
-  const { orderId = 1, amount = 0, shippingAddress = '' } = stateData;
+  const {
+    orderId = 1,
+    amount = 0,
+    shippingAddress = '',
+    cartItemIds = [],
+  } = stateData;
 
   const [paymentMethod, setPaymentMethod] = useState('CARD');
   const [submitting, setSubmitting] = useState(false);
@@ -40,6 +47,16 @@ const Payment = () => {
       // Response format: { message: "Payment successful", payment: { id, transactionId, status, ... } }
       const paymentInfo = response.data?.payment || response.data;
       setTransactionData(paymentInfo);
+
+      try {
+        if (Array.isArray(cartItemIds) && cartItemIds.length > 0) {
+          await api.post('/cart/clear-purchased', { cartItemIds });
+        }
+        await fetchCart();
+      } catch (cartError) {
+        console.error('Payment succeeded, but cart cleanup failed:', cartError);
+      }
+
       setPaymentSuccess(true);
       addToast('Payment successful!', 'success');
     } catch (err) {

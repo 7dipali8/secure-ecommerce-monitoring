@@ -1,5 +1,6 @@
 
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -63,6 +64,21 @@ export class CartController {
       request.user.userId,
       id,
       quantity,
+    );
+  }
+
+  @Post('clear-purchased')
+  async removePurchasedItems(
+    @Req() request: AuthenticatedRequest,
+    @Body('cartItemIds') cartItemIds: number[],
+  ) {
+    if (!Array.isArray(cartItemIds)) {
+      throw new BadRequestException('cartItemIds must be an array');
+    }
+
+    return this.cartService.removePurchasedItems(
+      request.user.userId,
+      cartItemIds,
     );
   }
 
