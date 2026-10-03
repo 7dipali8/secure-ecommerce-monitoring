@@ -185,13 +185,6 @@ FROM (
         'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600&auto=format&fit=crop&q=80'
     ),
     (
-        'Gaming Mouse',
-        'Logitech',
-        'Precision gaming mouse with ergonomic design',
-        1799.00, 2499.00, 28, 'Computers & Accessories', 30,
-        'https://images.unsplash.com/photo-1527814050087-3793815479db?w=600&auto=format&fit=crop&q=80'
-    ),
-    (
         'Laptop Backpack',
         'American Tourister',
         'Laptop backpack with padded laptop compartment',
@@ -225,7 +218,7 @@ FROM (
         'Compact mechanical number pad for productivity',
         1299.00, 1799.00, 28, 'Computers & Accessories', 20,
         'https://images.unsplash.com/photo-1595225476474-87563907a212?w=600&auto=format&fit=crop&q=80'
-    ),
+    )
 ) AS seed(name, brand, description, price, original_price, discount_percent, category, stock, image_url)
 WHERE NOT EXISTS (
     SELECT 1
@@ -241,7 +234,6 @@ SELECT
     seed.name, seed.brand, seed.description, seed.price, seed.original_price,
     seed.discount_percent, seed.category, seed.stock, seed.image_url
 FROM (VALUES
-    ('Fast Charging Cable', 'Anker', 'Durable USB-C fast charging cable', 499, 799, 38, 'Mobile Accessories', 50, 'https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb'),
     ('Tempered Glass Protector', 'amFilm', 'Scratch-resistant screen protector', 399, 599, 33, 'Mobile Accessories', 80, 'https://images.unsplash.com/photo-1512499617640-c74ae3a79d37'),
     ('Car Phone Holder', 'Portronics', 'Adjustable dashboard mobile holder', 699, 999, 30, 'Mobile Accessories', 40, 'https://images.unsplash.com/photo-1503376780353-7e6692767b70'),
     ('USB-C OTG Adapter', 'UGREEN', 'Compact USB-C OTG adapter', 349, 499, 30, 'Mobile Accessories', 55, 'https://images.unsplash.com/photo-1625842268584-8f3296236761'),
@@ -269,8 +261,7 @@ FROM (VALUES
     ('Skipping Rope', 'Boldfit', 'Adjustable skipping rope for cardio workouts', 299, 499, 40, 'Sports', 50, 'https://images.unsplash.com/photo-1434596922112-19c563067271'),
     ('Sports Water Bottle', 'Decathlon', 'Reusable bottle for sports and outdoor activities', 399, 599, 33, 'Sports', 40, 'https://images.unsplash.com/photo-1602143407151-7111542de6e8'),
     ('Gym Duffel Bag', 'Puma', 'Spacious duffel bag for sports equipment', 1499, 2199, 32, 'Sports', 20, 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62'),
-    ('Resistance Bands Set', 'Boldfit', 'Multi-resistance bands for strength training', 599, 999, 40, 'Sports', 45, 'https://images.unsplash.com/photo-1598289431512-b97b0917affc'),
-    ('Sports Gloves', 'Nivia', 'Grip-enhancing training gloves', 499, 799, 38, 'Sports', 30, 'https://images.unsplash.com/photo-1583473848882-f9a5bc7fd2ee')
+    ('Resistance Bands Set', 'Boldfit', 'Multi-resistance bands for strength training', 599, 999, 40, 'Sports', 45, 'https://images.unsplash.com/photo-1598289431512-b97b0917affc')
 ) AS seed(name, brand, description, price, original_price, discount_percent, category, stock, image_url)
 WHERE NOT EXISTS (
     SELECT 1
@@ -286,9 +277,7 @@ SELECT
     seed.name, seed.brand, seed.description, seed.price, seed.original_price,
     seed.discount_percent, seed.category, seed.stock, seed.image_url
 FROM (VALUES
-    ('Batting Gloves', 'SS', 'Padded batting gloves with secure wrist support', 899, 1299, 31, 'Cricket', 20, 'https://images.unsplash.com/photo-1583473848882-f9a5bc7fd2ee'),
     ('Cricket Leg Guards', 'SG', 'Lightweight batting pads for cricket practice', 1499, 2199, 32, 'Cricket', 18, 'https://images.unsplash.com/photo-1531415074968-036ba1b575da'),
-    ('Cricket Kit Bag', 'DSC', 'Spacious cricket kit bag with multiple compartments', 1999, 2799, 29, 'Cricket', 15, 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62'),
     ('Leather Cricket Ball', 'SG', 'Red leather cricket ball for match practice', 399, 599, 33, 'Cricket', 35, 'https://images.unsplash.com/photo-1574629810360-7efbbe195018')
 ) AS seed(name, brand, description, price, original_price, discount_percent, category, stock, image_url)
 WHERE NOT EXISTS (
@@ -312,13 +301,6 @@ SELECT
     seed.category, seed.stock, seed.image_url
 FROM (VALUES
     (
-        'Professional Badminton Racket',
-        'Yonex',
-        'Lightweight badminton racket designed for control and power.',
-        2499, 3499, 29, 'Badminton', 35,
-        'https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600'
-    ),
-    (
         'Badminton Shuttlecock Set',
         'Yonex',
         'Pack of durable shuttlecocks for regular practice and games.',
@@ -331,13 +313,6 @@ FROM (VALUES
         'Portable badminton net for indoor and outdoor play.',
         1299, 1799, 28, 'Badminton', 25,
         'https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600'
-    ),
-    (
-        'Badminton Grip Tape Set',
-        'Li-Ning',
-        'Comfortable anti-slip racket grip tapes.',
-        199, 299, 33, 'Badminton', 100,
-        'https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=600'
     ),
     (
         'Badminton Racket Cover',
@@ -354,13 +329,6 @@ FROM (VALUES
         'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600'
     ),
     (
-        'Badminton Kit Bag',
-        'Victor',
-        'Spacious sports bag for rackets and badminton accessories.',
-        1799, 2499, 28, 'Badminton', 20,
-        'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600'
-    ),
-    (
         'Badminton Headband',
         'Nivia',
         'Sweat-absorbing headband for training and matches.',
@@ -373,13 +341,6 @@ FROM (VALUES
         'Comfortable wristbands for sweat control during play.',
         199, 299, 33, 'Badminton', 70,
         'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600'
-    ),
-    (
-        'Badminton Training Racket',
-        'Cosco',
-        'Entry-level racket suitable for beginners and practice.',
-        899, 1299, 31, 'Badminton', 40,
-        'https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600'
     )
 ) AS seed(
     name, brand, description, price, original_price,
@@ -460,13 +421,6 @@ FROM (VALUES
         'https://images.unsplash.com/photo-1592432678016-e910b452f9a2?w=600'
     ),
     (
-        'Digital Skipping Rope',
-        'Boldfit',
-        'Skipping rope with a digital counter for cardio workouts.',
-        599, 899, 33, 'Fitness & Running', 40,
-        'https://images.unsplash.com/photo-1434596922112-19c563067271?w=600'
-    ),
-    (
         'Running Shoes',
         'Asics',
         'Lightweight running shoes designed for everyday training.',
@@ -488,25 +442,11 @@ FROM (VALUES
         'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600'
     ),
     (
-        'Fitness Gloves',
-        'Nivia',
-        'Padded workout gloves for a comfortable gym grip.',
-        399, 599, 33, 'Fitness & Running', 50,
-        'https://images.unsplash.com/photo-1583473848882-f9a5bc7fd2ee?w=600'
-    ),
-    (
         'Running Waist Belt',
         'Decathlon',
         'Compact waist belt for carrying essentials while running.',
         599, 899, 33, 'Fitness & Running', 35,
         'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600'
-    ),
-    (
-        'Push Up Bars',
-        'Boldfit',
-        'Stable push-up handles for home strength workouts.',
-        799, 1199, 33, 'Fitness & Running', 30,
-        'https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=600'
     )
 ) AS seed(
     name, brand, description, price, original_price,
@@ -568,13 +508,6 @@ FROM (VALUES
         'Simple wall clock for home and office interiors.',
         599, 899, 33, 'Home & Lifestyle', 30,
         'https://images.unsplash.com/photo-1563861826100-9cb868fdbe1c?w=600'
-    ),
-    (
-        'Stainless Steel Lunch Box',
-        'Cello',
-        'Reusable lunch box for office, school, and travel.',
-        799, 1199, 33, 'Home & Lifestyle', 45,
-        'https://images.unsplash.com/photo-1547592180-85f173990554?w=600'
     ),
     (
         'Decorative Table Planter',
