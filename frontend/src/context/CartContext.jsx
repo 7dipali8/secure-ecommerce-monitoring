@@ -95,30 +95,48 @@ export const CartProvider = ({ children }) => {
     addToast("Added to cart!", "success");
     return { success: true };
   };
+	const updateQuantity = async (productId, delta) => {
+  const item = cartItems.find(
+    (entry) => String(entry.productId) === String(productId)
+  );
 
-  const updateQuantity = async (productId, delta) => {
-    if (isAuthenticated) {
-      try {
-        if (delta > 0) {
-          await api.post('/cart', { productId: Number(productId), quantity: delta });
-        }
-      } catch (err) {
-        console.warn('Backend update quantity offline, applying locally:', err.message);
+  if (!item) return;
+
+  const newQuantity = Number(item.quantity) + Number(delta);
+
+  if (isAuthenticated) {
+    try {
+      if (newQuantity <= 0) {
+        await api.delete(`/cart/${item.id}`);
+      } else {
+        await api.patch(`/cart/${item.id}`, {
+          quantity: newQuantity,
+        });
       }
-    }
 
-    setCartItems((prev) => {
-      return prev
-        .map((item) => {
-          if (String(item.productId) === String(productId)) {
-            const newQty = item.quantity + delta;
-            return newQty > 0 ? { ...item, quantity: newQty } : null;
-          }
-          return item;
-        })
-        .filter(Boolean);
-    });
-  };
+      await fetchCart();
+      return;
+    } catch (err) {
+      console.error('Cart update failed:', err);
+      addToast('Could not update your cart. Please try again.', 'error');
+      return;
+    }
+  }
+
+  setCartItems((prev) =>
+    prev
+      .map((entry) => {
+        if (String(entry.productId) !== String(productId)) {
+          return entry;
+        }
+
+        return newQuantity > 0
+          ? { ...entry, quantity: newQuantity }
+          : null;
+      })
+      .filter(Boolean)
+  );
+};
 
   const clearCart = () => {
     setCartItems([]);

@@ -39,10 +39,7 @@ export class GatewayService {
     const url = `${service}${path}`;
 
     try {
-      const response = await axios.get(url, {
-        headers,
-      });
-
+      const response = await axios.get(url, { headers });
       return response.data;
     } catch (error) {
       this.handleAxiosError(error);
@@ -65,6 +62,43 @@ export class GatewayService {
         },
       });
 
+      return response.data;
+    } catch (error) {
+      this.handleAxiosError(error);
+    }
+  }
+
+  async forwardPatch(
+    service: string,
+    path: string,
+    body: Record<string, unknown>,
+    headers: Record<string, string> = {},
+  ) {
+    const url = `${service}${path}`;
+
+    try {
+      const response = await axios.patch(url, body, {
+        headers: {
+          ...headers,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      this.handleAxiosError(error);
+    }
+  }
+
+  async forwardDelete(
+    service: string,
+    path: string,
+    headers: Record<string, string> = {},
+  ) {
+    const url = `${service}${path}`;
+
+    try {
+      const response = await axios.delete(url, { headers });
       return response.data;
     } catch (error) {
       this.handleAxiosError(error);

@@ -1,9 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Headers,
   Param,
+  Patch,
   Post,
 } from '@nestjs/common';
 
@@ -102,6 +104,36 @@ export class GatewayController {
       process.env.CART_SERVICE_URL!,
       '/cart/clear-purchased',
       body,
+      {
+        authorization: headers.authorization || '',
+      },
+    );
+  }
+
+  @Patch('cart/:id')
+  async updateCartQuantity(
+    @Param('id') id: string,
+    @Body() body: { quantity: number },
+    @Headers() headers: Record<string, string>,
+  ) {
+    return this.gatewayService.forwardPatch(
+      process.env.CART_SERVICE_URL!,
+      `/cart/${id}`,
+      body,
+      {
+        authorization: headers.authorization || '',
+      },
+    );
+  }
+
+  @Delete('cart/:id')
+  async removeCartItem(
+    @Param('id') id: string,
+    @Headers() headers: Record<string, string>,
+  ) {
+    return this.gatewayService.forwardDelete(
+      process.env.CART_SERVICE_URL!,
+      `/cart/${id}`,
       {
         authorization: headers.authorization || '',
       },
