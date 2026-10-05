@@ -54,9 +54,9 @@ module "eks" {
   kubernetes_version  = "1.35"
   node_instance_types = ["t3.small"]
 
-  desired_nodes = 2
-  min_nodes     = 2
-  max_nodes     = 2
+  desired_nodes = 4
+  min_nodes     = 3
+  max_nodes     = 5
 }
 module "rds" {
   source = "./modules/rds"

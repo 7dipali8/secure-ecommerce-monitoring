@@ -65,7 +65,7 @@ data "aws_iam_policy_document" "jenkins" {
 
 
 
-    statement {
+  statement {
     sid    = "ReadRDSSecret"
     effect = "Allow"
 

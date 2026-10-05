@@ -3,7 +3,6 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ShoppingBag, ArrowLeft, ShieldCheck, Truck, Check, Plus, Minus } from 'lucide-react';
 import api from '../services/api';
 import { formatPrice } from '../utils/helpers';
-import { getProductImage, handleImageError } from '../utils/imageFallback';
 import { useCart } from '../context/CartContext';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorMessage from '../components/ErrorMessage';
@@ -49,7 +48,7 @@ const ProductDetails = () => {
   if (error || !product) return <ErrorMessage title="Unable to load product" message={error || 'Product not found'} onRetry={fetchProduct} />;
 
   const { name, description, price, category, stock, imageUrl } = product;
-  const imageSrc = getProductImage(imageUrl, name, category);
+  const imageSrc = imageUrl;
 
   const handleAddToCart = async () => {
     setAdding(true);
@@ -82,8 +81,8 @@ const ProductDetails = () => {
         <div style={{ position: 'relative', borderRadius: 'var(--radius-lg)', overflow: 'hidden', backgroundColor: '#f1f5f9', minHeight: '360px' }}>
           <img
             src={imageSrc}
+            onError={(e) => { e.currentTarget.style.display = "none"; }}
             alt={name}
-            onError={(e) => handleImageError(e, name, category)}
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           />
           {category && (

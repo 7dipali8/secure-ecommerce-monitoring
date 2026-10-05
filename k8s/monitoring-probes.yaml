@@ -1,0 +1,35 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: shopnest-website
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  interval: 30s
+  scrapeTimeout: 10s
+  module: http_2xx
+  prober:
+    url: blackbox-prometheus-blackbox-exporter:9115
+  targets:
+    staticConfig:
+      static:
+        - http://nextdevopsprohub.cloud
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: shopnest-api
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  interval: 30s
+  scrapeTimeout: 10s
+  module: http_2xx
+  prober:
+    url: blackbox-prometheus-blackbox-exporter:9115
+  targets:
+    staticConfig:
+      static:
+        - http://api-gateway.ecommerce.svc.cluster.local:4000/

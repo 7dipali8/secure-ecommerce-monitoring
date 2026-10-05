@@ -1,12 +1,12 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 
-import { User } from './entities/User.ts';
-import { Product } from './entities/Product.ts';
-import { CartItem } from './entities/CartItem.ts';
-import { Order } from './entities/Order.ts';
-import { OrderItem } from './entities/OrderItem.ts';
-import { Payment } from './entities/Payment.ts';
+import { User } from './entities/User.js';
+import { Product } from './entities/Product.js';
+import { CartItem } from './entities/CartItem.js';
+import { Order } from './entities/Order.js';
+import { OrderItem } from './entities/OrderItem.js';
+import { Payment } from './entities/Payment.js';
 
 export default new DataSource({
   type: 'postgres',

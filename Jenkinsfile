@@ -870,8 +870,13 @@ EOF
                         echo "Applying manifests..."
 
 
-			for manifest in "$WORKSPACE"/k8s/*.yaml; do
-    if [ "$(basename "$manifest")" != "namespace.yaml" ]; then
+for manifest in "$WORKSPACE"/k8s/*.yaml; do
+    filename="$(basename "$manifest")"
+
+    if [ "$filename" != "namespace.yaml" ] &&
+       [ "$filename" != "product-seed-job.yaml" ]; then
+
+        echo "Applying manifest: $filename"
         kubectl apply -f "$manifest" -n "$KUBE_NAMESPACE"
     fi
 done
@@ -1107,6 +1112,35 @@ done
         // ============================================================
         // APPLICATION VERIFICATION
         // ============================================================
+
+        stage('Seed Product Database') {
+            steps {
+                container('kubectl') {
+                    sh '''
+                        set -e
+                        export KUBECONFIG="$WORKSPACE/kubeconfig"
+
+                        echo "Waiting for product service rollout..."
+                        kubectl rollout status deployment/product-service -n "$KUBE_NAMESPACE" --timeout=300s
+
+                        echo "Creating product seed ConfigMap..."
+                        kubectl create configmap product-seed-sql --from-file=products.sql="$WORKSPACE/database/seeds/products.sql" -n "$KUBE_NAMESPACE" --dry-run=client -o yaml | kubectl apply -f -
+
+                        echo "Removing previous seed Job if it exists..."
+                        kubectl delete job product-seed-job -n "$KUBE_NAMESPACE" --ignore-not-found=true
+
+                        echo "Applying product seed Job..."
+                        kubectl apply -f "$WORKSPACE/k8s/product-seed-job.yaml" -n "$KUBE_NAMESPACE"
+
+                        echo "Waiting for product seed Job to complete..."
+                        kubectl wait --for=condition=complete job/product-seed-job -n "$KUBE_NAMESPACE" --timeout=300s
+
+                        echo "Product seed Job logs:"
+                        kubectl logs job/product-seed-job -n "$KUBE_NAMESPACE"
+                    '''
+                }
+            }
+        }
 
         stage('Application Verification') {
 

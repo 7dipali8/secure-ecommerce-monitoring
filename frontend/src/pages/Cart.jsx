@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingBag, ArrowRight, Trash2, Plus, Minus, ShieldCheck } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { formatPrice } from '../utils/helpers';
-import { getProductImage, handleImageError } from '../utils/imageFallback';
 import api from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import EmptyState from '../components/EmptyState';
@@ -104,9 +103,9 @@ const Cart = () => {
                 }}
               >
                 <img
-                  src={getProductImage(item.product.imageUrl, item.product.name, item.product.category)}
+                  src={item.product.imageUrl}
+                  onError={(e) => { e.currentTarget.style.display = "none"; }}
                   alt={item.product.name}
-                  onError={(e) => handleImageError(e, item.product.name, item.product.category)}
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
               </div>

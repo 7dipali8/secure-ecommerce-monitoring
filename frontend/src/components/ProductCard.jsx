@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingBag, Check } from 'lucide-react';
 import { formatPrice } from '../utils/helpers';
-import { getProductImage, handleImageError } from '../utils/imageFallback';
 import { useCart } from '../context/CartContext';
 
 const ProductCard = ({ product }) => {
@@ -26,23 +25,18 @@ const ProductCard = ({ product }) => {
     }
   };
 
-  const isTableTennis =
-    (name && name.toLowerCase().includes('table tennis')) ||
-    (category && category.toLowerCase().includes('table tennis'));
 
-  const imageSrc = isTableTennis
-    ? null
-    : getProductImage(imageUrl, name, category);
+  const imageSrc = imageUrl;
 
   return (
     <div className="card card-hover" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       {/* Product Image Container */}
       <Link to={`/products/${id}`} style={{ position: 'relative', overflow: 'hidden', paddingTop: '75%', backgroundColor: '#f1f5f9' }}>
-        {!isTableTennis && (
+        {imageSrc && (
           <img
             src={imageSrc}
             alt={name}
-            onError={(e) => handleImageError(e, name, category)}
+            onError={(e) => { e.currentTarget.style.display = "none"; }}
             style={{
               position: 'absolute',
               top: 0,
