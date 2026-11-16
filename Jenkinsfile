@@ -941,6 +941,12 @@ EOF
                             exit 1
                         fi
 
+                        echo "===== Migration dependency diagnostics ====="
+                        echo "Workspace: $WORKSPACE"
+                        echo "Current directory: $(pwd)"
+                        echo "NPM project root: $(npm prefix)"
+                        node -e "const p=require('./package.json'); const l=require('./package-lock.json'); console.log('Package:',p.name); console.log('Declared TypeScript:',p.devDependencies.typescript); console.log('Locked TypeScript:',l.packages['node_modules/typescript']?.version);"
+
                         echo "Installing root project dependencies..."
                         npm ci --include=dev --no-audit --no-fund
 
