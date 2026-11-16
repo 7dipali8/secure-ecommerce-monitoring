@@ -699,23 +699,27 @@ EOF
 
 
 	        // ============================================================
+        // ============================================================
         // SYNC RDS CREDENTIALS TO KUBERNETES
         // ============================================================
-
         stage('Sync RDS Credentials') {
-
             steps {
-
                 container('aws') {
-
                     sh '''
                         set -e
+                        set +x
+                        umask 077
+                        rm -f "$WORKSPACE/rds-credentials.env"
 
                         echo "================================================"
                         echo "SYNCING RDS CREDENTIALS TO KUBERNETES"
                         echo "================================================"
 
-                        RDS_SECRET_ARN="$(aws rds describe-db-instances --db-instance-identifier secure-ecommerce-monitoring-production-postgres --region "$AWS_REGION" --query "DBInstances[0].MasterUserSecret.SecretArn" --output text)"
+                        RDS_SECRET_ARN="$(aws rds describe-db-instances \
+                          --db-instance-identifier secure-ecommerce-monitoring-production-postgres \
+                          --region "$AWS_REGION" \
+                          --query "DBInstances[0].MasterUserSecret.SecretArn" \
+                          --output text)"
 
                         if [ -z "$RDS_SECRET_ARN" ] || [ "$RDS_SECRET_ARN" = "None" ]; then
                             echo "ERROR: AWS-managed RDS secret ARN was not found."
@@ -728,20 +732,31 @@ EOF
                           --query SecretString \
                           --output text)"
 
-                        echo "AWS Secrets Manager secret retrieved successfully."
+                        USERNAME="$(printf '%s' "$SECRET_JSON" | sed -n 's/.*"username":"\([^"]*\)".*/\1/p')"
+                        PASSWORD="$(printf '%s' "$SECRET_JSON" | sed -n 's/.*"password":"\([^"]*\)".*/\1/p')"
 
-                        USERNAME="$(printf '%s' "$SECRET_JSON" | sed -n 's/.*"username":"\\([^"]*\\)".*/\\1/p')"
-                        PASSWORD="$(printf '%s' "$SECRET_JSON" | sed -n 's/.*"password":"\\([^"]*\\)".*/\\1/p')"
-                        HOST="$(printf '%s' "$SECRET_JSON" | sed -n 's/.*"host":"\\([^"]*\\)".*/\\1/p')"
-                        PORT="$(printf '%s' "$SECRET_JSON" | sed -n 's/.*"port":\\([0-9]*\\).*/\\1/p')"
+                        HOST="$(aws rds describe-db-instances \
+                          --db-instance-identifier secure-ecommerce-monitoring-production-postgres \
+                          --region "$AWS_REGION" \
+                          --query "DBInstances[0].Endpoint.Address" \
+                          --output text)"
+
+                        PORT="$(aws rds describe-db-instances \
+                          --db-instance-identifier secure-ecommerce-monitoring-production-postgres \
+                          --region "$AWS_REGION" \
+                          --query "DBInstances[0].Endpoint.Port" \
+                          --output text)"
+
                         DBNAME="ecommerce_db"
 
-                        if [ -z "$USERNAME" ] || [ -z "$PASSWORD" ] || [ -z "$HOST" ] || [ -z "$PORT" ] || [ -z "$DBNAME" ]; then
-                            echo "ERROR: Required RDS credentials are missing from AWS Secrets Manager."
+                        if [ -z "$USERNAME" ] || [ -z "$PASSWORD" ] || \
+                           [ -z "$HOST" ] || [ "$HOST" = "None" ] || \
+                           [ -z "$PORT" ] || [ "$PORT" = "None" ]; then
+                            echo "ERROR: Required RDS configuration is incomplete."
                             exit 1
                         fi
 
-                        printf 'username=%s\\npassword=%s\\nhost=%s\\nport=%s\\ndbname=%s\\n' \
+                        printf 'username=%s\npassword=%s\nhost=%s\nport=%s\ndbname=%s\n' \
                           "$USERNAME" \
                           "$PASSWORD" \
                           "$HOST" \
@@ -750,17 +765,19 @@ EOF
                           > "$WORKSPACE/rds-credentials.env"
 
                         chmod 600 "$WORKSPACE/rds-credentials.env"
+                        unset SECRET_JSON PASSWORD
 
-                        echo "RDS credentials prepared for Kubernetes."
+                        echo "RDS configuration prepared securely."
                     '''
                 }
 
                 container('kubectl') {
-
                     sh '''
                         set -e
-
+                        set +x
                         export KUBECONFIG="$WORKSPACE/kubeconfig"
+
+                        trap 'rm -f "$WORKSPACE/rds-credentials.env"' EXIT
 
                         kubectl create secret generic rds-credentials \
                           --namespace "$KUBE_NAMESPACE" \
@@ -769,9 +786,6 @@ EOF
                           -o yaml \
                           | kubectl apply -f -
 
-                        rm -f "$WORKSPACE/rds-credentials.env"
-
-                        echo ""
                         echo "RDS Kubernetes Secret synchronized successfully."
 
                         kubectl get secret rds-credentials \
@@ -781,8 +795,6 @@ EOF
             }
         }
 
-
-        // ============================================================
         // SYNC JWT SECRET TO KUBERNETES
         // ============================================================
 
