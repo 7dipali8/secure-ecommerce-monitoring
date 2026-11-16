@@ -669,8 +669,11 @@ EOF
         echo ""
         echo "===== Ecommerce Namespace ====="
 
-        kubectl get namespace "$KUBE_NAMESPACE" \
-          || kubectl create namespace "$KUBE_NAMESPACE"
+        kubectl get namespace "$KUBE_NAMESPACE" || {
+          echo "ERROR: Namespace $KUBE_NAMESPACE does not exist.";
+          echo "Please create it using administrator access.";
+          exit 1;
+        }
 
         echo ""
         echo "===== Ecommerce Pods ====="
@@ -712,8 +715,15 @@ EOF
                         echo "SYNCING RDS CREDENTIALS TO KUBERNETES"
                         echo "================================================"
 
+                        RDS_SECRET_ARN="$(aws rds describe-db-instances --db-instance-identifier secure-ecommerce-monitoring-production-postgres --region "$AWS_REGION" --query "DBInstances[0].MasterUserSecret.SecretArn" --output text)"
+
+                        if [ -z "$RDS_SECRET_ARN" ] || [ "$RDS_SECRET_ARN" = "None" ]; then
+                            echo "ERROR: AWS-managed RDS secret ARN was not found."
+                            exit 1
+                        fi
+
                         SECRET_JSON="$(aws secretsmanager get-secret-value \
-                          --secret-id secure-ecommerce-monitoring/rds \
+                          --secret-id "$RDS_SECRET_ARN" \
                           --region "$AWS_REGION" \
                           --query SecretString \
                           --output text)"
@@ -724,7 +734,7 @@ EOF
                         PASSWORD="$(printf '%s' "$SECRET_JSON" | sed -n 's/.*"password":"\\([^"]*\\)".*/\\1/p')"
                         HOST="$(printf '%s' "$SECRET_JSON" | sed -n 's/.*"host":"\\([^"]*\\)".*/\\1/p')"
                         PORT="$(printf '%s' "$SECRET_JSON" | sed -n 's/.*"port":\\([0-9]*\\).*/\\1/p')"
-                        DBNAME="$(printf '%s' "$SECRET_JSON" | sed -n 's/.*"dbname":"\\([^"]*\\)".*/\\1/p')"
+                        DBNAME="ecommerce_db"
 
                         if [ -z "$USERNAME" ] || [ -z "$PASSWORD" ] || [ -z "$HOST" ] || [ -z "$PORT" ] || [ -z "$DBNAME" ]; then
                             echo "ERROR: Required RDS credentials are missing from AWS Secrets Manager."
@@ -855,40 +865,35 @@ EOF
                         echo "================================================"
 
                         echo ""
-                        echo "Kubernetes manifests:"
-
-                        find "$WORKSPACE/k8s" \
-                          -maxdepth 1 \
-                          -type f \
-                          -name '*.yaml' \
-                          -o \
-                          -name '*.yml' \
-                          | sort
-
-
-                        echo ""
-                        echo "Applying manifests..."
-
-
-for manifest in "$WORKSPACE"/k8s/*.yaml; do
-    filename="$(basename "$manifest")"
-
-    if [ "$filename" != "namespace.yaml" ] &&
-       [ "$filename" != "product-seed-job.yaml" ]; then
-
-        echo "Applying manifest: $filename"
-        kubectl apply -f "$manifest" -n "$KUBE_NAMESPACE"
-    fi
-done
+                        echo "ShopNest application manifests:"
+                        echo "Applying application manifests..."
+                        for filename in \
+                            api-gateway-configmap.yaml \
+                            api-gateway.yaml \
+                            auth-service.yaml \
+                            cart-service.yaml \
+                            frontend.yaml \
+                            order-service.yaml \
+                            payment-service.yaml \
+                            product-service.yaml
+                        do
+                            manifest="$WORKSPACE/k8s/$filename"
+                            if [ ! -f "$manifest" ]; then
+                                echo "ERROR: Manifest not found: $manifest"
+                                exit 1
+                            fi
+                            echo "Applying manifest: $filename"
+                            kubectl apply -f "$manifest" -n "$KUBE_NAMESPACE"
+                        done
 
                         echo ""
                         echo "================================================"
                         echo "KUBERNETES MANIFESTS APPLIED"
                         echo "================================================"
 
-                        kubectl get all \
-                          -n "$KUBE_NAMESPACE"
-                    '''
+                        kubectl get pods -n "$KUBE_NAMESPACE"
+                        kubectl get services -n "$KUBE_NAMESPACE"
+                        kubectl get deployments -n "$KUBE_NAMESPACE"
                 }
             }
         }
