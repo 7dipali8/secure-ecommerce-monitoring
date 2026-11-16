@@ -862,6 +862,103 @@ EOF
         }
 
         // ============================================================
+        // RUN DATABASE MIGRATIONS
+        // ============================================================
+
+        stage('Run Database Migrations') {
+
+            steps {
+
+                container('kubectl') {
+
+                    sh '''
+                        set -e
+                        set +x
+                        umask 077
+
+                        export KUBECONFIG="$WORKSPACE/kubeconfig"
+
+                        CREDENTIAL_FILE="$WORKSPACE/db-credentials.b64"
+                        rm -f "$CREDENTIAL_FILE"
+
+                        echo "Retrieving encoded database credentials..."
+
+                        for key in host port username password dbname
+                        do
+                            value="$(kubectl get secret rds-credentials \
+                              -n "$KUBE_NAMESPACE" \
+                              -o "jsonpath={.data.${key}}")"
+
+                            if [ -z "$value" ]; then
+                                echo "ERROR: Missing database credential: $key"
+                                exit 1
+                            fi
+
+                            printf '%s\n' "$value" >> "$CREDENTIAL_FILE"
+                        done
+
+                        chmod 600 "$CREDENTIAL_FILE"
+
+                        echo "Encoded database credentials prepared."
+                    '''
+                }
+
+                container('tools') {
+
+                    sh '''
+                        set -e
+                        set +x
+                        umask 077
+
+                        CREDENTIAL_FILE="$WORKSPACE/db-credentials.b64"
+
+                        trap 'rm -f "$CREDENTIAL_FILE"; unset DB_PASSWORD' EXIT
+
+                        if [ ! -s "$CREDENTIAL_FILE" ]; then
+                            echo "ERROR: Database credential file is missing."
+                            exit 1
+                        fi
+
+                        {
+                            IFS= read -r DB_HOST_B64
+                            IFS= read -r DB_PORT_B64
+                            IFS= read -r DB_USERNAME_B64
+                            IFS= read -r DB_PASSWORD_B64
+                            IFS= read -r DB_NAME_B64
+                        } < "$CREDENTIAL_FILE"
+
+                        export DB_HOST="$(printf '%s' "$DB_HOST_B64" | base64 -d)"
+                        export DB_PORT="$(printf '%s' "$DB_PORT_B64" | base64 -d)"
+                        export DB_USERNAME="$(printf '%s' "$DB_USERNAME_B64" | base64 -d)"
+                        export DB_PASSWORD="$(printf '%s' "$DB_PASSWORD_B64" | base64 -d)"
+                        export DB_NAME="$(printf '%s' "$DB_NAME_B64" | base64 -d)"
+
+                        unset DB_HOST_B64 DB_PORT_B64 DB_USERNAME_B64
+                        unset DB_PASSWORD_B64 DB_NAME_B64
+
+                        if [ -z "$DB_HOST" ] || [ -z "$DB_USERNAME" ] || [ -z "$DB_PASSWORD" ] || [ -z "$DB_NAME" ]; then
+                            echo "ERROR: Required database configuration is incomplete."
+                            exit 1
+                        fi
+
+                        echo "Installing root project dependencies..."
+                        npm ci --include=dev --no-audit --no-fund
+
+                        echo ""
+                        echo "Running TypeORM database migrations..."
+                        npm run db:migrate
+
+                        unset DB_PASSWORD
+
+                        echo ""
+                        echo "Database migrations completed successfully."
+                    '''
+                }
+            }
+        }
+
+
+        // ============================================================
         // DEPLOY KUBERNETES MANIFESTS
         // ============================================================
 
