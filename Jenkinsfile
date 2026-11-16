@@ -806,6 +806,9 @@ EOF
 
                     sh '''
                         set -e
+                        set +x
+                        umask 077
+                        rm -f "$WORKSPACE/jwt-secret.txt"
 
                         echo "================================================"
                         echo "SYNCING JWT SECRET TO KUBERNETES"
@@ -817,7 +820,7 @@ EOF
                           --query SecretString \
                           --output text)"
 
-                        JWT_SECRET="$(printf '%s' "$JWT_JSON" | sed -n 's/.*"JWT_SECRET":"\\([^"]*\\)".*/\\1/p')"
+                        JWT_SECRET="$(printf '%s' "$JWT_JSON" | awk -F'"' '{for(i=1;i<=NF;i++) if($i=="JWT_SECRET") print $(i+2)}')"
 
                         if [ -z "$JWT_SECRET" ]; then
                             echo "ERROR: JWT_SECRET is missing from AWS Secrets Manager."
@@ -835,8 +838,11 @@ EOF
 
                     sh '''
                         set -e
+                        set +x
+                        umask 077
 
                         export KUBECONFIG="$WORKSPACE/kubeconfig"
+                        trap 'rm -f "$WORKSPACE/jwt-secret.txt"' EXIT
 
                         kubectl create secret generic jwt-secret \
                           --namespace "$KUBE_NAMESPACE" \
@@ -844,8 +850,6 @@ EOF
                           --dry-run=client \
                           -o yaml \
                           | kubectl apply -f -
-
-                        rm -f "$WORKSPACE/jwt-secret.txt"
 
                         echo ""
                         echo "JWT Kubernetes Secret synchronized successfully."
