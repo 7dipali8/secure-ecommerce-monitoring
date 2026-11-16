@@ -732,8 +732,8 @@ EOF
                           --query SecretString \
                           --output text)"
 
-                        USERNAME="$(printf '%s' "$SECRET_JSON" | sed -n 's/.*"username":"\([^"]*\)".*/\1/p')"
-                        PASSWORD="$(printf '%s' "$SECRET_JSON" | sed -n 's/.*"password":"\([^"]*\)".*/\1/p')"
+                        USERNAME="$(printf '%s' "$SECRET_JSON" | awk -F'"' '{for(i=1;i<=NF;i++) if($i=="username") print $(i+2)}')"
+                        PASSWORD="$(printf '%s' "$SECRET_JSON" | awk -F'"' '{for(i=1;i<=NF;i++) if($i=="password") print $(i+2)}')"
 
                         HOST="$(aws rds describe-db-instances \
                           --db-instance-identifier secure-ecommerce-monitoring-production-postgres \
