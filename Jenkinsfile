@@ -894,6 +894,7 @@ EOF
                         kubectl get pods -n "$KUBE_NAMESPACE"
                         kubectl get services -n "$KUBE_NAMESPACE"
                         kubectl get deployments -n "$KUBE_NAMESPACE"
+                        '''
                 }
             }
         }
